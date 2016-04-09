@@ -1,0 +1,38 @@
+#compdef git-lb-checkout
+
+# should be
+#    > git lb-checkout Stripping/master Phys/StrippingSelections
+#
+# could be built from
+#    > git remote show -n
+#    Stripping
+#    DaVinci
+#
+# need to figure out remote branch names instead of remotes
+# -> can be looked up in the git-checkout function
+# 
+# a list of all possible packages can be looked up
+#    > svn pg packages svn+ssh://svn.cern.ch/reps/lhcb
+#    Tr/TrackUtils                              Rec
+#    Velo/VeloRecMonitors                       Rec
+#    Phys/CommonParticles                       Stripping
+#    Phys/CommonParticlesArchive                Stripping
+#
+# grep out the right packages with " Stripping" (note the white space) where
+# "Stripping is to be grepped from the previous argument with $line[1] the
+# trailing "    Stripping" is removed with sed "s/  *Stripping//" (one
+# whitespace, and an arbitrary number of following whitespaces)
+
+# drafts
+#_arguments '1:project:($(git remote show -n))' '2:packages:($(svn pg packages svn+ssh://svn.cern.ch/reps/lhcb | grep " $line[1]" | sed "s/  *$line[1]//"))'
+#_arguments '1:project:($(git remote show -n))' '2:packages:->lookup'
+
+_arguments '1:project:__git_remote_branch_names' '2:packages:->lookup'
+case $state in
+     (lookup)
+         project=($(echo $line[1] | sed "s/\/.*//"))
+         packages=($(svn pg packages svn+ssh://svn.cern.ch/reps/lhcb | grep " $project" | sed "s/  *$project//"))
+         _describe 'packages' packages
+;;
+esac
+
