@@ -1,0 +1,9 @@
+#compdef lb-dev
+
+local -a projects
+
+projects=(Brunel Bender DaVinci Moore Urania Erasmus Tesla)
+#_describe 'projects' projects
+
+_arguments '-l[list versions]' '1:project:($projects)' '2:version:($(lb-dev -l $line[1] | sed "s/ .*//"))'
+
