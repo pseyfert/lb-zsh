@@ -1,0 +1,7 @@
+#compdef git-lb-use
+
+local -a projects
+
+projects=(Stripping Phys Rec Analysis Hlt Online Brunel Moore DaVinci Tesla Urania Erasmus)
+
+_describe 'project' projects
