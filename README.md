@@ -14,3 +14,9 @@ LHCb as well. Instead it is planned to contain only features which are useful
 to LHCb users only.
 
 A border line case is the completion for `root`.
+
+# helpful pointers
+
+When developing the completions,
+[this howto](https://github.com/zsh-users/zsh-completions/blob/master/zsh-completions-howto.org)
+was of great help.
