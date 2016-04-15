@@ -31,7 +31,7 @@ _arguments '1:project:__git_remote_branch_names' '2:packages:->lookup'
 case $state in
      (lookup)
          project=($(echo $line[1] | sed "s/\/.*//"))
-         packages=($(svn pg packages svn+ssh://svn.cern.ch/reps/lhcb | grep " $project" | sed "s/  *$project//"))
+         packages=($(svn pg packages http://svn.cern.ch/guest/lhcb | grep " $project" | sed "s/  *$project//"))
          _describe 'packages' packages
 ;;
 esac
