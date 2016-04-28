@@ -1,4 +1,4 @@
-#compdef lb-dev lb-run
+#compdef lb-dev
 
 local -a projects
 

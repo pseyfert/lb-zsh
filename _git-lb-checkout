@@ -27,12 +27,16 @@
 #_arguments '1:project:($(git remote show -n))' '2:packages:($(svn pg packages svn+ssh://svn.cern.ch/reps/lhcb | grep " $line[1]" | sed "s/  *$line[1]//"))'
 #_arguments '1:project:($(git remote show -n))' '2:packages:->lookup'
 
-_arguments '1:project:__git_remote_branch_names' '2:packages:->lookup'
+#_arguments '1:project:__git_remote_branch_names' '2:packages:->lookup'
+_arguments '1:project:->projectlookup' '2:packages:->packagelookup'
 case $state in
-     (lookup)
-         project=($(echo $line[1] | sed "s/\/.*//"))
-         packages=($(svn pg packages svn+ssh://svn.cern.ch/reps/lhcb | grep " $project" | sed "s/  *$project//"))
-         _describe 'packages' packages
-;;
+  (packagelookup)
+    project=($(echo $line[1] | sed "s/\/.*//"))
+    packages=($(svn pg packages http://svn.cern.ch/guest/lhcb | grep " $project" | sed "s/  *$project//"))
+    _describe 'packages' packages
+    ;;
+  (projectlookup)
+    _alternative 'branches::__git_remote_branch_names' 'tags::__git_tags'
+    ;;
 esac
 
