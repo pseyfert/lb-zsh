@@ -1,0 +1,37 @@
+run() {
+  found=false
+  
+  orgdir=$PWD
+  oldpwd=$OLDPWD
+  if [ -f run ]
+  then
+    runcommand=$(readlink -f run)
+    found=true
+  fi
+  
+  if [ "$found" = false ]
+  then
+    while [ $PWD != $HOME ] && [ $PWD != "/" ]
+    do
+      cd ..
+      if [ -f run ] 
+      then
+        runcommand=$(readlink -f run)
+        found=true
+        break
+      fi
+    done
+  fi 
+  
+  cd $oldpwd
+  cd $orgdir
+  
+  
+  if [ "$found" = true ]
+  then
+    $runcommand "$@"
+    return $?
+  else
+    return 127
+  fi
+}  
