@@ -3,7 +3,7 @@
 local -a projects
 local -a common_commands
 
-common_commands=(gaudirun.py dst-dump dst-explorer)
+common_commands=(gaudirun.py dst-dump dst-explorer bender db-tags)
 projects=(Brunel Bender DaVinci Moore Urania Erasmus Tesla)
 #_describe 'projects' projects
 
