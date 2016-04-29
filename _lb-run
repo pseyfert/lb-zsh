@@ -11,14 +11,18 @@ __lb_commands () {
   _describe 'commonly used commands' common_commands
 }
 
-_arguments '-l[list versions]' '1:project:($projects)' '2:version:($(lb-dev -l $line[1] | sed "s/ .*//"))' '3:command:->runnablestuff'
+_arguments '-l[list versions]' '1:project:($projects)' '2:version:->listversions' '3:command:->runnablestuff'
 
 case $state in
   (runnablestuff)
     #_describe 'commonly used commands' common_commands
     _alternative '::__lb_commands' \
-                 'currently available commands::_command_names -e'
-  ;;
+      'currently available commands::_command_names -e'
+    ;;
+  (listversions)
+    local -a versionlist
+    versionlist=($(lb-dev -l $line[1] | sed "s/ .*//" ))
+    _describe 'project versions' versionlist
+    ;;
 esac
-
 
