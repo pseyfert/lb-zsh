@@ -3,7 +3,15 @@
 local -a projects
 local -a common_commands
 
+# at the time of completion, the environment which will be used for execution
+# doesn't exist. Therefore, dst-dump and others will not be found by the
+# zsh-standard function _command_names. I expand the list by a few hard coded
+# commands.
+
 common_commands=(gaudirun.py dst-dump dst-explorer bender db-tags)
+
+# hard coded list of possible projects (I assume non-application projects like
+# Phys will not be used ...)
 projects=(Brunel Bender DaVinci Moore Urania Erasmus Tesla)
 #_describe 'projects' projects
 
@@ -21,6 +29,7 @@ case $state in
     ;;
   (listversions)
     local -a versionlist
+    # see lb-dev completion for explanation (this is copy&paste here)
     versionlist=($(lb-dev -l $line[1] | sed "s/ .*//" | sort -r | uniq))
     _describe -V 'project versions' versionlist
     ;;

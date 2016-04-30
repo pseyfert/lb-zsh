@@ -1,21 +1,33 @@
 run() {
+  # keep track if the `run` executable got found
+  # http://stackoverflow.com/questions/2953646/how-to-declare-and-use-boolean-variables-in-shell-script
   found=false
   
+  # needed to restore the current working directory and the previous working
+  # directory (`cd -`) after the search
   orgdir=$PWD
   oldpwd=$OLDPWD
+
+  # before looping, check if one is in the right place already
   if [ -f run ]
   then
+    # get an absolute path of `run` because it will be called from a
+    # potentially different directory
     runcommand=$(readlink -f run)
     found=true
-  fi
-  
-  if [ "$found" = false ]
-  then
+  else
+    # I would've liked to check if `..` exists, but unfortunately `/..` does
+    # exist!  As a barrier I don't go higher than $HOME (exploring beyond will
+    # usually not bring you anywhere since you're outside of any project when
+    # being in $HOME, and the load on e.g. afs would be nonsense)
+    # http://unix.stackexchange.com/questions/67898/using-the-not-equal-operator-for-string-comparison
     while [ $PWD != $HOME ] && [ $PWD != "/" ]
     do
       cd ..
       if [ -f run ] 
       then
+        # get an absolute path of `run` because it will be called from a
+        # potentially different directory
         runcommand=$(readlink -f run)
         found=true
         break
@@ -23,15 +35,21 @@ run() {
     done
   fi 
   
+  # restore the working directory
+  # do this before(!) calling run (arguments might contain relative paths)
   cd $oldpwd
   cd $orgdir
   
-  
   if [ "$found" = true ]
   then
+    # forward arguments "correctly"
+    # http://stackoverflow.com/questions/4824590/propagate-all-arguments-in-a-bash-shell-script
     $runcommand "$@"
+    # and forward return code
+    # http://stackoverflow.com/questions/8742783/returning-value-from-called-function-in-shell-script
     return $?
   else
+    # if `run` wasn't found, don't execute anything!
     return 127
   fi
 }  
