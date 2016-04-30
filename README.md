@@ -1,3 +1,5 @@
+![logo](logo.png)
+
 # lb-zsh
 zsh goodies for LHCb
 
@@ -15,6 +17,11 @@ to LHCb users only.
 
 A border line case is the completion for `root`.
 
+## demo
+See my [blog
+post](http://virgilio.mib.infn.it/~seyfert/lb-zsh-developments-and-screencasts.html)
+for a screencast.
+
 # helpful pointers
 
 When developing the completions,
@@ -28,3 +35,44 @@ stackoverflow/stackexchange posts which helped:
  * http://stackoverflow.com/questions/8742783/returning-value-from-called-function-in-shell-script
  * http://unix.stackexchange.com/questions/67898/using-the-not-equal-operator-for-string-comparison
 
+# feature list
+
+## git-lb-use
+`git lb-use` completes from a list of hard coded projects.
+
+## git-lb-checkout
+the git-lb-checkout command gets completed as:
+`git lb-checkout [remote/branch-or-tag] [package-in-remote-project]`
+The first block only querries accessible branches and tags from
+remotes/projects which were added with `lb-use` before. Packages get completed
+from the official list of existing packages, filtered according to the project
+in the previous argument (when starting with `git lb-checkout
+Stripping/master`, only packages associated to the Stripping project get added.
+It is not checked if they exist in the chosen branch or tag).
+
+## lb-run
+
+`lb-run` completes projects (from a hard coded list), and suggests version
+numbers (checking the list of existing versions, starting to suggest from the
+most recent one). Afterwards, any (currenty) executable command gets completed,
+though I don't complete further after that.
+TODO: add nightly support
+
+## lb-dev
+just does the first part of `lb-run`, i.e. no completion after the version number.
+TODO: add nightly support
+
+## lblogin
+`LbLogin` knows about the `-c` option and has a hard coded list of common
+`CMTCONFIG` variables.
+
+## GUESS
+If you're (deep) inside a CMT project path, the `GUESS` alias will be `PROJECT
+VERSION`, which you can use with `SetupProject` or `Lbglimpse`.
+
+## run
+Similarly, the `run` function searches for the `run` executable in an `lb-dev` project.
+Not to go too wild, I placed barriers not to go beyond `$HOME` or `/`.
+
+## general TODO
+None of the commands checks against the current `CMTCONFIG`.
