@@ -22,4 +22,4 @@ compdef _gnu_generic gaudirun.py
 # > SetupProject GUESS
 alias -g 'GUESS'='$(pwd | sed "s/.*cmtuser\/\([^\/]*\)_\([^\/]*\).*/\1 \2/")'
 
-source zshrun
+source ~/lb-zsh/zshrun
