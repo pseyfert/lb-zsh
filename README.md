@@ -71,8 +71,11 @@ If you're (deep) inside a CMT project path, the `GUESS` alias will be `PROJECT
 VERSION`, which you can use with `SetupProject` or `Lbglimpse`.
 
 ## run
-Similarly, the `run` function searches for the `run` executable in an `lb-dev` project.
-Not to go too wild, I placed barriers not to go beyond `$HOME` or `/`.
+Similarly, the `run` function searches for the `run` executable in an `lb-dev`
+project.  Not to go too wild, I placed barriers not to go beyond `$HOME` or
+`/`.  `run` can handle if it doesn't find `run` (will return an error instead
+of wildly running commands). Furhtermore, the `run` function forwards the exit
+code of the `run` executable.
 
 ## general TODO
 None of the commands checks against the current `CMTCONFIG`.

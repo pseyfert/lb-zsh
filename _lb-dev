@@ -10,7 +10,13 @@ _arguments '-l[list versions]' '1:project:($projects)' '2:version:->listversions
 case $state in
   (listversions)
     local -a versionlist
+    # versions are querried from `lb-dev -l PROJECT`
+    # $line[1] is the (already chosen) project
+    # from the list of available versions, the install paths are stripped
+    # the list of versions is sorted (most recent first!)
+    # and duplications are removed
     versionlist=($(lb-dev -l $line[1] | sed "s/ .*//" | sort -r | uniq))
+    # the -V option preserves the order of the provided list
     _describe -V 'project versions' versionlist
     ;;
 esac
