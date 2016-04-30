@@ -5,5 +5,13 @@ local -a projects
 projects=(Brunel Bender DaVinci Moore Urania Erasmus Tesla)
 #_describe 'projects' projects
 
-_arguments '-l[list versions]' '1:project:($projects)' '2:version:($(lb-dev -l $line[1] | sed "s/ .*//"))'
+_arguments '-l[list versions]' '1:project:($projects)' '2:version:->listversions'
+
+case $state in
+  (listversions)
+    local -a versionlist
+    versionlist=($(lb-dev -l $line[1] | sed "s/ .*//" | sort -r | uniq))
+    _describe -V 'project versions' versionlist
+    ;;
+esac
 
