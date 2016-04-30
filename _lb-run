@@ -21,8 +21,8 @@ case $state in
     ;;
   (listversions)
     local -a versionlist
-    versionlist=($(lb-dev -l $line[1] | sed "s/ .*//" ))
-    _describe 'project versions' versionlist
+    versionlist=($(lb-dev -l $line[1] | sed "s/ .*//" | sort -r | uniq))
+    _describe -V 'project versions' versionlist
     ;;
 esac
 
