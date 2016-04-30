@@ -32,5 +32,4 @@ alias -g 'GUESS'='$(pwd | sed "s/.*cmtuser\/\([^\/]*\)_\([^\/]*\).*/\1 \2/")'
 
 # load the run() function from zshrun
 # FIXME: path where zshrun actually is...
-source zshrun
 source ~/lb-zsh/zshrun
