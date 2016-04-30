@@ -1,0 +1,19 @@
+#compdef getpack
+
+# a list of all possible packages can be looked up
+#    > svn pg packages svn+ssh://svn.cern.ch/reps/lhcb
+#    > svn pg packages http://svn.cern.ch/guest/lhcb
+#    Tr/TrackUtils                              Rec
+#    Velo/VeloRecMonitors                       Rec
+#    Phys/CommonParticles                       Stripping
+#    Phys/CommonParticlesArchive                Stripping
+#
+
+_arguments '1:packages:->packagelookup'
+case $state in
+  (packagelookup)
+    packages=($(svn pg packages http://svn.cern.ch/guest/lhcb | sed "s/  *.*//"))
+    _describe 'packages' packages
+    ;;
+esac
+
