@@ -2,6 +2,6 @@
 
 local -a projects
 
-projects=(Stripping Phys Rec Analysis Hlt Online Brunel Moore DaVinci Tesla Urania Erasmus)
+projects=(Stripping Phys Rec Analysis Hlt Online Brunel Moore DaVinci Tesla Urania Erasmus Gauss)
 
 _describe 'project' projects
