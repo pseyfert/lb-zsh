@@ -50,6 +50,10 @@ in the previous argument (when starting with `git lb-checkout
 Stripping/master`, only packages associated to the Stripping project get added.
 It is not checked if they exist in the chosen branch or tag).
 
+## getpack
+The same function which returns a (shortened) list of packages for
+git-lb-checkout just provides all packages.
+
 ## lb-run
 
 `lb-run` completes projects (from a hard coded list), and suggests version
