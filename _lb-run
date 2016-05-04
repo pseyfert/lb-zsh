@@ -12,7 +12,7 @@ common_commands=(gaudirun.py dst-dump dst-explorer bender db-tags)
 
 # hard coded list of possible projects (I assume non-application projects like
 # Phys will not be used ...)
-projects=(Brunel Bender DaVinci Moore Urania Erasmus Tesla)
+projects=(Brunel Bender DaVinci Moore Urania Erasmus Tesla Gauss)
 #_describe 'projects' projects
 
 __lb_commands () {
