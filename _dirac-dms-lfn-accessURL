@@ -1,0 +1,6 @@
+#compdef dirac-dms-lfn-accessURL
+
+local -a mysites
+mysites=(CERN_MC-DST-EOS CERN-USER)
+
+_arguments '1:lfns:' '2:SE:($mysites)'
