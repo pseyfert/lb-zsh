@@ -30,6 +30,20 @@ compdef _gnu_generic gaudirun.py
 # > SetupProject GUESS
 alias -g 'GUESS'='$(pwd | sed "s/.*cmtuser\/\([^\/]*\)_\([^\/]*\).*/\1 \2/")'
 
+# expand PROMPT by current project, but don't pile up modifications
+# http://www.nparikh.org/unix/prompt.php#zsh
+# http://stackoverflow.com/questions/307503/whats-the-best-way-to-check-that-environment-variables-are-set-in-unix-shellscr
+if [ -z $ORGPROMPT ]
+then
+export ORGPROMPT=${PROMPT}
+fi
+if [ -z $GAUDIAPPNAME ]
+then
+PROMPT="${ORGPROMPT}"
+else
+PROMPT="[${GAUDIAPPNAME} ${GAUDIAPPVERSION}] ${ORGPROMPT}"
+fi
+
 # load the run() function from zshrun
 # FIXME: path where zshrun actually is...
 source ~/lb-zsh/zshrun
