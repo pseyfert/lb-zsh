@@ -30,7 +30,7 @@ case $state in
   (listversions)
     local -a versionlist
     # see lb-dev completion for explanation (this is copy&paste here)
-    versionlist=($(lb-dev -l $line[1] | sed "s/ .*//" | sort -r | uniq))
+    versionlist=($(lb-dev -l $line[1] | sed "s/ .*//" | sort -r -V | uniq))
     _describe -V 'project versions' versionlist
     ;;
 esac
