@@ -1,4 +1,4 @@
-#compdef LbLogin.sh
+#compdef LbLogin.sh afsLbLogin cvmfsLbLogin
 
 # could call the gnu_generic here to provide all the documentation from --help
 # but I only need LbLogin to change the CMTCONFIG variable, so this is the only
