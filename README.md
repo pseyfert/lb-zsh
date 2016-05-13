@@ -59,7 +59,8 @@ git-lb-checkout just provides all packages.
 `lb-run` completes projects (from a hard coded list), and suggests version
 numbers (checking the list of existing versions, starting to suggest from the
 most recent one). Afterwards, any (currenty) executable command gets completed,
-though I don't complete further after that.
+and a few common commands get suggested. After that, the completion for the
+chosen command is called.
 TODO: add nightly support
 
 ## lb-dev
