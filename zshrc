@@ -71,3 +71,10 @@ _SetupAlias() {
 }
 
 compdef _SetupAlias SetupDaVinci
+compdef _SetupAlias SetupBrunel
+compdef _SetupAlias SetupBender
+compdef _SetupAlias SetupErasmus
+compdef _SetupAlias SetupUrania
+compdef _SetupAlias SetupTesla
+compdef _SetupAlias SetupMoore
+compdef _SetupAlias SetupGauss
