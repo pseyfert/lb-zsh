@@ -47,4 +47,34 @@ fi
 
 # load the run() function from zshrun
 # FIXME: path where zshrun actually is...
-source zshrun
+source ~/lb-zsh/zshrun
+
+setopt complete_aliases
+
+_SetupAlias() {
+  _arguments '1:version:->listversions'
+
+  case $state in
+    (listversions)
+      local -a versionlist
+      local word=$(echo $words[1] | sed "s/Setup//") 
+      #  echo "now print"
+      #  echo "the words is" $words
+      #  echo "the line is" $line
+      #  echo "words 0   is" $words[0]
+      #  echo "words 1   is" $words[1]
+      #  echo "words 2   is" $words[-1]
+      versionlist=($(SetupProject.sh $word --list-versions | sed "s/ .*//" | sort -r | uniq)) 
+      _describe -V 'project versions' versionlist
+      ;;
+  esac
+}
+
+compdef _SetupAlias SetupDaVinci
+compdef _SetupAlias SetupBrunel
+compdef _SetupAlias SetupBender
+compdef _SetupAlias SetupErasmus
+compdef _SetupAlias SetupUrania
+compdef _SetupAlias SetupTesla
+compdef _SetupAlias SetupMoore
+compdef _SetupAlias SetupGauss
