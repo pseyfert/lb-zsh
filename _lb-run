@@ -19,7 +19,7 @@ __lb_commands () {
   _describe 'commonly used commands' common_commands
 }
 
-_arguments '-l[list versions]' '1:project:($projects)' '2:version:->listversions' '3:command:->runnablestuff'
+_arguments '-l[list versions]' '-c::CMTCONFIG:->listcmt' '1:project:($projects)' '2:version:->listversions' '3:command:->runnablestuff'
 
 case $state in
   (runnablestuff)
@@ -32,6 +32,11 @@ case $state in
     # see lb-dev completion for explanation (this is copy&paste here)
     versionlist=($(lb-dev -l $line[1] | sed "s/ .*//" | sort -r -V | uniq))
     _describe -V 'project versions' versionlist
+    ;;
+  (listcmt)
+    local -a theenvs
+    theenvs=(x86_64-slc6-gcc48-dbg x86_64-slc6-gcc48-opt x86_64-slc6-gcc49-dbg x86_64-slc6-gcc49-do0 x86_64-slc6-gcc49-opt)
+    _describe 'cmtconfig' theenvs
     ;;
 esac
 
