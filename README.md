@@ -82,5 +82,16 @@ project.  Not to go too wild, I placed barriers not to go beyond `$HOME` or
 of wildly running commands). Furhtermore, the `run` function forwards the exit
 code of the `run` executable.
 
+## SetupDaVinci (and others)
+
+Similar to `lb-run`, version numbers (from `SetupDaVinci --list-versions`) are
+suggested.
+
+## dirac-dms-lfn-accessURL
+
+The two (for me) interesting grid storage elements are completed, such that I
+don't have to call `dirac-dms-lfn-replicas` just to look up how the CERN EOS
+MC storage element is called.
+
 ## general TODO
 None of the commands checks against the current `CMTCONFIG`.
