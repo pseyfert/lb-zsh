@@ -19,7 +19,7 @@ __lb_commands () {
   _describe 'commonly used commands' common_commands
 }
 
-_arguments '-l[list versions]' '-c::CMTCONFIG:->listcmt' '1:project:($projects)' '2:version:->listversions' '3:command:->runnablestuff'
+_arguments '-l[list versions]' '-c::CMTCONFIG:->listcmt' '1:project:($projects)' '2:version:->listversions' '3:command:->runnablestuff' '4:continue:->thenext'
 
 case $state in
   (runnablestuff)
