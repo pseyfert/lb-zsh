@@ -42,7 +42,7 @@ then
 PROMPT="${ORGPROMPT}"
 else
 PROMPTPREFIX="[${GAUDIAPPNAME} ${GAUDIAPPVERSION}] "
-PROMPT="${PROMPTPREFIX} ${ORGPROMPT}"
+PROMPT="${PROMPTPREFIX}${ORGPROMPT}"
 fi
 
 # load the run() function from zshrun
