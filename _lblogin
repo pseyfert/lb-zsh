@@ -1,8 +1,7 @@
 #compdef LbLogin.sh afsLbLogin cvmfsLbLogin
 
-# could call the gnu_generic here to provide all the documentation from --help
-# but I only need LbLogin to change the CMTCONFIG variable, so this is the only
-# completed option. PLUS: thereby I provide a list of possible CMTCONFIG values.
+# just calling _gnu_generic would already do a pretty good job, but I'm more
+# interested in suggestions for CMTDONFIG than any of the other arguments.
 
 _arguments '-c:CMTCONFIG:->listcmt' ':::->whatelse'
 case $state in
