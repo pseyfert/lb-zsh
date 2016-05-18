@@ -15,7 +15,7 @@ case $state in
     # from the list of available versions, the install paths are stripped
     # the list of versions is sorted (most recent first!)
     # and duplications are removed
-    versionlist=($(lb-dev -l $line[1] | sed "s/ .*//" | sort -r | uniq))
+    versionlist=($(lb-dev -l $line[1] | sed "s/ .*//" | sort -r -V | uniq))
     # the -V option preserves the order of the provided list
     _describe -V 'project versions' versionlist
     ;;

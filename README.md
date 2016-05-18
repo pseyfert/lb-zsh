@@ -69,7 +69,9 @@ TODO: add nightly support
 
 ## lblogin
 `LbLogin` knows about the `-c` option and has a hard coded list of common
-`CMTCONFIG` variables.
+`CMTCONFIG` variables. For `afsLbLogin` and `cvmfsLbLogin` that's about it.
+For `LbLogin.sh`, also the `_gnu_generic` function is called to parse the help
+message and show all documented options.
 
 ## GUESS
 If you're (deep) inside a CMT project path, the `GUESS` alias will be `PROJECT
