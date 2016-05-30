@@ -1,0 +1,16 @@
+#compdef git-lb-push
+
+# should be
+#    > git lb-push Stripping your_new_branchname
+#
+
+_arguments '1:project:->projectlookup' '2:branch:->branchnames'
+case $state in
+  (branchnames)
+    _alternative 'branches::__git_remote_branch_names_noprefix'
+    ;;
+  (projectlookup)
+    _alternative 'projects::__git_remotes'
+    ;;
+esac
+
