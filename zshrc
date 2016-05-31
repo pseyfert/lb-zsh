@@ -78,3 +78,24 @@ compdef _SetupAlias SetupUrania
 compdef _SetupAlias SetupTesla
 compdef _SetupAlias SetupMoore
 compdef _SetupAlias SetupGauss
+
+alias -g 'ZSH'='/afs/cern.ch/user/p/pseyfert/.local/bin/zsh'
+MYLBRUN() {
+  alias -L > $HOME/.tmpaliases
+  lb-run "$@"
+  return $?
+}
+MYZSH() {
+  alias -L > $HOME/.tmpaliases
+  /afs/cern.ch/user/p/pseyfert/.local/bin/zsh "$@"
+  return $?
+}
+compdef _lb-run MYLBRUN
+
+if [ -e $HOME/.tmpaliases ]; then
+  echo "importing tmpaliases"
+  source $HOME/.tmpaliases
+  rm $HOME/.tmpaliases
+else
+  echo "not importing tmpaliases"
+fi
