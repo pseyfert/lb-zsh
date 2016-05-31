@@ -57,14 +57,22 @@ _SetupAlias() {
   case $state in
     (listversions)
       local -a versionlist
-      local word=$(echo $words[1] | sed "s/Setup//") 
-      #  echo "now print"
+      #  upon "SetupDaVinci<TAB> one sees
       #  echo "the words is" $words
+      #  > "The words is SetupDaVinci"
       #  echo "the line is" $line
+      #  > "The line is"
       #  echo "words 0   is" $words[0]
+      #  > "words 0   is"
       #  echo "words 1   is" $words[1]
+      #  > "words 1   is SetupDaVinci"
       #  echo "words 2   is" $words[-1]
-      versionlist=($(SetupProject.sh $word --list-versions | sed "s/ .*//" | sort -r | uniq)) 
+      #  > "words 2   is"
+      #
+      #  grep out the project name from the end of SetupFOOBARPROJECT
+      local word=$(echo $words[1] | sed "s/Setup//")
+      #  then call "SetupProject.sh" instead of "SetupDaVinci" (avoid messing with aliases)
+      versionlist=($(SetupProject.sh $word --list-versions | sed "s/ .*//" | sort -r | uniq))
       _describe -V 'project versions' versionlist
       ;;
   esac
