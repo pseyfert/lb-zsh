@@ -41,13 +41,24 @@ case $state in
   (thenext)
     # shift away "lb-run", Project, and version
     # inspired by /usr/share/zsh/functions/Completion/Zsh/_precommand
+
+    # should be 5 in the most simple case, e.g.
+    #
+    # lb-run DaVinci v40r2 python <TAB>
+    # > CURRENT is  5
+    # echo " CURRENT is " $CURRENT
+    # 
+    # and for _normal one needs then three shifts and three (( CURRENT -- ))
+    #
+    # using a for loop should help when using nightlies or other constellations
+    # with increased numbers of arguments
+
     precommands+=($words[1])
-    shift words
-    shift words
-    shift words
-    (( CURRENT-- ))
-    (( CURRENT-- ))
-    (( CURRENT-- ))
+    for ((i = $CURRENT; i > 2; i--));
+    do
+      shift words
+      (( CURRENT-- ))
+    done
     
     _normal
     ;;
