@@ -87,6 +87,18 @@ compdef _SetupAlias SetupTesla
 compdef _SetupAlias SetupMoore
 compdef _SetupAlias SetupGauss
 
+# solution suggested by Bart Schaefer in http://www.zsh.org/mla/users/2016/msg00466.html
+_expand_alias_and_complete() {
+  if [[ -o complete_aliases && -n $aliases[$words[1]] ]]; then
+    words[1]=( $aliases[$words[1]] )
+    _complete
+  else
+    return 1
+  fi
+}
+zstyle ':completion:*' completer _complete _expand_alias_and_complete
+
+
 alias -g 'ZSH'='/afs/cern.ch/user/p/pseyfert/.local/bin/zsh'
 MYLBRUN() {
   alias -L > $HOME/.tmpaliases
