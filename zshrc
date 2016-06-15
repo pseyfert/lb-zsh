@@ -25,6 +25,10 @@ compctl -g '*(-/) *(dst|mdst)' + g '*(-/)' bender
 compctl -g '*(-/) *(py|opts)' + g '*(-/)' gaudirun.py
 compdef _gnu_generic gaudirun.py
 
+# execute .py script with ganga or just start it
+compctl -g '*(-/) *(py)' + g '*(-/)' ganga
+compdef _gnu_generic ganga
+
 # when you're in /afs/cern.ch/user/f/foobar/cmtuser/Project_vVVrRR/Phys/DecayTreeTuple/options/mysubdir...
 # i.e. anywhere in a subdirectory of a SetupProject.sh project, set up what you're working with
 # > SetupProject GUESS
