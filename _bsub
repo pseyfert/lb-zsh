@@ -1,0 +1,5 @@
+#compdef bsub
+
+# bsub -q 1nd -J foobar < nulltest.sh
+
+_arguments '-q:QUEUES:(8nm 1nh 8nh 1nd 1nw)' '-J:JOBNAME:' "-R:RESOURCES:(\'type=CentOS7\')"

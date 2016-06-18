@@ -84,6 +84,16 @@ project.  Not to go too wild, I placed barriers not to go beyond `$HOME` or
 of wildly running commands). Furhtermore, the `run` function forwards the exit
 code of the `run` executable.
 
+## bsub
+complete `-q` and queue names, `-R` for CentOS7 submission, hint that `-J` is
+the job name.
+
+## gaudirun.py
+complete .py and .opts files and suggest options from --help
+
+## ganga
+complete .py files and suggest options from --help
+
 ## SetupDaVinci (and others)
 
 Similar to `lb-run`, version numbers (from `SetupDaVinci --list-versions`) are
