@@ -88,6 +88,9 @@ code of the `run` executable.
 complete `-q` and queue names, `-R` for CentOS7 submission, hint that `-J` is
 the job name.
 
+## bkill
+suggest lxbatch job ids
+
 ## gaudirun.py
 complete .py and .opts files and suggest options from --help
 

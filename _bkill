@@ -1,0 +1,3 @@
+#compdef bkill
+
+_alternative "jobid:JOBID:($(bjobs -noheader -o jobid))"
