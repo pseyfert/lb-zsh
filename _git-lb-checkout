@@ -11,32 +11,18 @@
 # need to figure out remote branch names instead of remotes
 # -> can be looked up in the git-checkout function
 # 
-# a list of all possible packages can be looked up
-#    > svn pg packages svn+ssh://svn.cern.ch/reps/lhcb
-#    Tr/TrackUtils                              Rec
-#    Velo/VeloRecMonitors                       Rec
-#    Phys/CommonParticles                       Stripping
-#    Phys/CommonParticlesArchive                Stripping
-#
-# grep out the right packages with " Stripping" (note the white space) where
-# "Stripping is to be grepped from the previous argument with $line[1] the
-# trailing "    Stripping" is removed with sed "s/  *Stripping//" (one
-# whitespace, and an arbitrary number of following whitespaces)
-
-# drafts
-#_arguments '1:project:($(git remote show -n))' '2:packages:($(svn pg packages svn+ssh://svn.cern.ch/reps/lhcb | grep " $line[1]" | sed "s/  *$line[1]//"))'
-#_arguments '1:project:($(git remote show -n))' '2:packages:->lookup'
-
-#_arguments '1:project:__git_remote_branch_names' '2:packages:->lookup'
-_arguments '1:project:->projectlookup' '2:packages:->packagelookup'
+# packagelookup copied from _git-ls-tree
+# projectlookup *not* copied from _git-ls-tree, to get *only* remote tree-ish things
+local curcontext=$curcontext state line ret=1
+declare -A opt_args
+_arguments '1:project:->projectlookup' '2:packages:->packagelookup' && ret=0
 case $state in
   (packagelookup)
-    project=($(echo $line[1] | sed "s/\/.*//"))
-    packages=($(svn pg packages http://svn.cern.ch/guest/lhcb | grep " $project" | sed "s/  *$project//"))
-    _describe 'packages' packages
+    __git_ignore_line __git_tree_files ${PREFIX:-.} $line[1] && ret=0
     ;;
   (projectlookup)
-    _alternative 'branches::__git_remote_branch_names' 'tags::__git_tags'
+    _alternative 'branches::__git_remote_branch_names' 'tags::__git_tags' && ret=0
     ;;
 esac
 
+return ret
