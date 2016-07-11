@@ -1,6 +1,7 @@
 #compdef lb-run
 
 local -a projects
+local -a days
 local -a common_commands
 
 # at the time of completion, the environment which will be used for execution
@@ -9,50 +10,21 @@ local -a common_commands
 # commands.
 
 common_commands=(gaudirun.py dst-dump dst-explorer bender db-tags)
+days=(Mon Tue Wed Thu Fri Sat Sun today)
 
 # hard coded list of possible projects (I assume non-application projects like
 # Phys will not be used ...)
 projects=(Brunel Bender DaVinci Moore Urania Erasmus Tesla Gauss)
 #_describe 'projects' projects
 
-__lb_commands () {
-  _describe 'commonly used commands' common_commands
+__projects () {
+  _describe 'projects' projects
 }
-
-_arguments '-l[list versions]' '-c::CMTCONFIG:->listcmt' '1:project:($projects)' '2:version:->listversions' '3:command:->runnablestuff' '4:continue:->thenext'
-
-case $state in
-  (runnablestuff)
-    #_describe 'commonly used commands' common_commands
-    _alternative '::__lb_commands' \
+__runnablestuff () {
+  if [ $CURRENT -eq 4 ] ; then
+    _alternative ':commonly used commands:(($common_commands))' \
       'currently available commands::_command_names -e'
-    ;;
-  (listversions)
-    local -a versionlist
-    # see lb-dev completion for explanation (this is copy&paste here)
-    versionlist=($(lb-dev -l $line[1] | sed "s/ .*//" | sort -r -V | uniq))
-    _describe -V 'project versions' versionlist
-    ;;
-  (listcmt)
-    local -a theenvs
-    theenvs=(x86_64-slc6-gcc48-dbg x86_64-slc6-gcc48-opt x86_64-slc6-gcc49-dbg x86_64-slc6-gcc49-do0 x86_64-slc6-gcc49-opt)
-    _describe 'cmtconfig' theenvs
-    ;;
-  (thenext)
-    # shift away "lb-run", Project, and version
-    # inspired by /usr/share/zsh/functions/Completion/Zsh/_precommand
-
-    # should be 5 in the most simple case, e.g.
-    #
-    # lb-run DaVinci v40r2 python <TAB>
-    # > CURRENT is  5
-    # echo " CURRENT is " $CURRENT
-    # 
-    # and for _normal one needs then three shifts and three (( CURRENT -- ))
-    #
-    # using a for loop should help when using nightlies or other constellations
-    # with increased numbers of arguments
-
+  else
     precommands+=($words[1])
     for ((i = $CURRENT; i > 2; i--));
     do
@@ -61,6 +33,61 @@ case $state in
     done
     
     _normal
-    ;;
-esac
+  fi
+}
+__list_versions () {
+  if [ $CURRENT -eq 3 ] ; then
+    local -a versionlist
+    # see lb-dev completion for explanation (this is copy&paste here)
+    versionlist=($(lb-run -l $@ | sed "s/ .*//" | sort -r -V | uniq))
+    _describe -V 'project versions' versionlist
+    return
+  fi
+  __runnablestuff
+}
+
+__check_nightlies() {
+  if [ $CURRENT -eq 2 ] ; then
+    _alternative '::__projects' ':nightly:((--nightly\:"run nightlies"))'
+  elif [ "$words[2]" = "--nightly" ] ; then
+    if [ $CURRENT -eq 3 ] ; then
+      # slot mandatory
+      _alternative ':slots:((lhcb-head lhcb-upgradeTracking))'
+    elif [ $CURRENT -eq 4 ] ; then
+      # either day or project
+      _alternative '::__projects' ':days:(($days))'
+    elif [[ $CURRENT -eq 5 && ${days[(r)$words[4]]} == $words[4] ]] ; then
+      #http://stackoverflow.com/questions/5203665/zsh-check-if-string-is-in-array
+      # if previous was day, then project
+      __projects
+    else
+      # now version (and forwarding)
+      slot=$words[3]
+      local -a day
+      if [[ ${days[(r)$words[4]]} == $words[4] ]] ; then
+        day=$words[4]
+        shift words
+        (( CURRENT-- ))
+      else
+      fi
+      project=$words[4]
+      shift words
+      shift words
+      (( CURRENT-- ))
+      (( CURRENT-- ))
+      if [ -z "$day" ] ; then
+        __list_versions "--nightly" $slot $words[2]
+      else
+        __list_versions "--nightly" $slot $day $words[2]
+      fi
+    fi
+  else
+    # suggest version, or forward further
+    __list_versions $words[2]
+  fi
+
+}
+
+#_arguments '-l[list versions]' '-c::CMTCONFIG:->listcmt' '*: :__check_nightlies'
+_arguments '*: :__check_nightlies'
 
