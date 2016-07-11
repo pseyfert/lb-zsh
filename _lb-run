@@ -47,6 +47,11 @@ __list_versions () {
 }
 
 __check_nightlies() {
+  for ((i = $NORMARG; i > 2; i--));
+  do
+    shift words
+    (( CURRENT-- ))
+  done
   if [ $CURRENT -eq 2 ] ; then
     _alternative '::__projects' ':nightly:((--nightly\:"run nightlies"))'
   elif [ "$words[2]" = "--nightly" ] ; then
@@ -87,7 +92,12 @@ __check_nightlies() {
   fi
 
 }
+__listcmt () {
+  local -a theenvs
+  theenvs=(x86_64-slc6-gcc48-dbg x86_64-slc6-gcc48-opt x86_64-slc6-gcc49-dbg x86_64-slc6-gcc49-do0 x86_64-slc6-gcc49-opt)
+  _describe 'cmtconfig' theenvs
+}
 
-#_arguments '-l[list versions]' '-c::CMTCONFIG:->listcmt' '*: :__check_nightlies'
-_arguments '*: :__check_nightlies'
+integer NORMARG
+_arguments -n '-l[list versions]' '-c[specify platform]:CMTCONFIG:__listcmt' '*: :__check_nightlies'
 
