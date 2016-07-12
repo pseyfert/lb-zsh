@@ -74,5 +74,5 @@ __listcmt () {
 }
 
 integer NORMARG
-_arguments -n '-l[list versions]' '--name=[name for the local directory]' -c[specify platform]:CMTCONFIG:__listcmt' '*: :__check_nightlies_dev'
+_arguments -n '-l[list versions]' '--name=[name for the local directory]:' '-c[specify platform]:CMTCONFIG:__listcmt' '*: :__check_nightlies_dev'
 
