@@ -1,23 +1,78 @@
 #compdef lb-dev
 
 local -a projects
+local -a days
 
+# hard coded list of possible projects (I assume non-application projects like
+# Phys will not be used ...)
 projects=(Brunel Bender DaVinci Moore Urania Erasmus Tesla Gauss)
 #_describe 'projects' projects
 
-_arguments '-l[list versions]' '1:project:($projects)' '2:version:->listversions'
-
-case $state in
-  (listversions)
+__projects () {
+  _describe 'projects' projects
+}
+__list_versions_dev () {
+  if [ $CURRENT -eq 3 ] ; then
     local -a versionlist
-    # versions are querried from `lb-dev -l PROJECT`
-    # $line[1] is the (already chosen) project
-    # from the list of available versions, the install paths are stripped
-    # the list of versions is sorted (most recent first!)
-    # and duplications are removed
-    versionlist=($(lb-dev -l $line[1] | sed "s/ .*//" | sort -r -V | uniq))
-    # the -V option preserves the order of the provided list
+    # see lb-dev completion for explanation (this is copy&paste here)
+    versionlist=($(lb-run -l $@ | sed "s/ .*//" | sort -r -V | uniq))
     _describe -V 'project versions' versionlist
-    ;;
-esac
+    return
+  fi
+}
+
+__check_nightlies_dev() {
+  for ((i = $NORMARG; i > 2; i--));
+  do
+    shift words
+    (( CURRENT-- ))
+  done
+  if [ $CURRENT -eq 2 ] ; then
+    _alternative '::__projects' ':nightly:((--nightly\:"run nightlies"))'
+  elif [ "$words[2]" = "--nightly" ] ; then
+    if [ $CURRENT -eq 3 ] ; then
+      # slot mandatory
+      _alternative ':slots:((lhcb-head lhcb-upgradeTracking))'
+    elif [ $CURRENT -eq 4 ] ; then
+      # either day or project
+      _alternative '::__projects' ':days:(($days))'
+    elif [[ $CURRENT -eq 5 && ${days[(r)$words[4]]} == $words[4] ]] ; then
+      #http://stackoverflow.com/questions/5203665/zsh-check-if-string-is-in-array
+      # if previous was day, then project
+      __projects
+    else
+      # now version (and forwarding)
+      slot=$words[3]
+      local -a day
+      if [[ ${days[(r)$words[4]]} == $words[4] ]] ; then
+        day=$words[4]
+        shift words
+        (( CURRENT-- ))
+      else
+      fi
+      project=$words[4]
+      shift words
+      shift words
+      (( CURRENT-- ))
+      (( CURRENT-- ))
+      if [ -z "$day" ] ; then
+        __list_versions_dev "--nightly" $slot $words[2]
+      else
+        __list_versions_dev "--nightly" $slot $day $words[2]
+      fi
+    fi
+  else
+    # suggest version, or forward further
+    __list_versions_dev $words[2]
+  fi
+
+}
+__listcmt () {
+  local -a theenvs
+  theenvs=(x86_64-slc6-gcc48-dbg x86_64-slc6-gcc48-opt x86_64-slc6-gcc49-dbg x86_64-slc6-gcc49-do0 x86_64-slc6-gcc49-opt)
+  _describe 'cmtconfig' theenvs
+}
+
+integer NORMARG
+_arguments -n '-l[list versions]' '--name=[name for the local directory]' -c[specify platform]:CMTCONFIG:__listcmt' '*: :__check_nightlies_dev'
 
