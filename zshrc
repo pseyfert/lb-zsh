@@ -32,7 +32,10 @@ compdef _gnu_generic ganga
 # when you're in /afs/cern.ch/user/f/foobar/cmtuser/Project_vVVrRR/Phys/DecayTreeTuple/options/mysubdir...
 # i.e. anywhere in a subdirectory of a SetupProject.sh project, set up what you're working with
 # > SetupProject GUESS
+# > Lbglimpse <searchterm> GUESS
+# > Lbglimpse <searchterm> GUESSAGAIN
 alias -g 'GUESS'='$(pwd | sed "s/.*cmtuser\/\([^\/]*\)_\([^\/]*\).*/\1 \2/")'
+alias -g 'GUESSAGAIN'='${GAUDIAPPNAME} ${GAUDIAPPVERSION}'
 
 # expand PROMPT by current project, but don't pile up modifications
 # http://www.nparikh.org/unix/prompt.php#zsh
