@@ -1,4 +1,5 @@
 run() {
+  alias -L > $HOME/.tmpaliases
   # keep track if the `run` executable got found
   # http://stackoverflow.com/questions/2953646/how-to-declare-and-use-boolean-variables-in-shell-script
   found=false
