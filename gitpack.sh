@@ -1,9 +1,11 @@
 #!/bin/zsh
 
+touch CMakeLists.txt
+
 if [ ! -e .git ]
 then
   git init
-  if [ $? ]
+  if [ $? -ne 0 ]
   then
     echo "could not initialise git."
     return 3
@@ -13,30 +15,33 @@ fi
 
 #### figure out project
 
-packageentries=($(svn pg packages http://svn.cern.ch/guest/lhcb | grep $1 | sed "s/.* //"))
+packageentries=($(svn pg packages http://svn.cern.ch/guest/lhcb | grep $1" "))
 #packageentries=($(cat allpacks | grep $1))
 
-if [ ! ${#packageentries} -eq 1 ]
+if [ ! ${#packageentries} -eq 2 ]
 then
   echo "couldn't determine project accurately"
   echo "choices are:"
   echo $packageentries
   return 1
 else
-  echo "Project is " $packageentries[1]
+  echo "projectline is " $packageentries
 fi
-project=($(echo $packageentries[1] | sed "s/.* //"))
-package=($(echo $packageentries[1] | sed "s/ .*//"))
+project=($(echo $packageentries[2]))
+package=($(echo $packageentries[1]))
+
+echo "Project " $project
+echo "Package " $package
 
 #### figure out if project needs to be added
 
 git remote | grep $project
 
-if [ $? ]
+if [ $? -ne 0 ]
 then
   echo "Adding project $project"
   git lb-use $project
-  if [ $? ]
+  if [ $? -ne 0 ]
   then
     echo "could not add project $project"
     return 2
