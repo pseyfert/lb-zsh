@@ -93,6 +93,7 @@ compdef _SetupAlias SetupUrania
 compdef _SetupAlias SetupTesla
 compdef _SetupAlias SetupMoore
 compdef _SetupAlias SetupGauss
+compdef _SetupAlias SetupGanga
 
 # solution suggested by Bart Schaefer in http://www.zsh.org/mla/users/2016/msg00466.html
 _expand_alias_and_complete() {
