@@ -14,7 +14,7 @@ days=(Mon Tue Wed Thu Fri Sat Sun today)
 
 # hard coded list of possible projects (I assume non-application projects like
 # Phys will not be used ...)
-projects=(Brunel Bender DaVinci Moore Urania Erasmus Tesla Gauss LHCbDirac)
+projects=(Brunel Bender DaVinci Moore Urania Erasmus Tesla Gauss LHCbDirac Ganga)
 #_describe 'projects' projects
 
 __projects () {
