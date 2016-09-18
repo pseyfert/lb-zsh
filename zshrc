@@ -127,3 +127,4 @@ if [ -e $HOME/.tmpaliases ]; then
 else
   echo "not importing tmpaliases"
 fi
+export GANGASCRIPTS='/afs/cern.ch/user/p/pseyfert/gangascripts'
