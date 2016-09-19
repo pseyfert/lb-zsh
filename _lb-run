@@ -39,7 +39,9 @@ __list_versions () {
   if [ $CURRENT -eq 3 ] ; then
     local -a versionlist
     # see lb-dev completion for explanation (this is copy&paste here)
-    versionlist=($(lb-run -l $@ | sed "s/ .*//" | sort -r -V | uniq))
+    versionlist=($(lb-run -l $@ | sed "s/ .*//" | sort -r -V | uniq | python /afs/cern.ch/user/p/pseyfert/lb-zsh/mysort.py))
+    # FIXME: do version sorting in python
+    #versionlist=($(lb-run -l $@ | sed "s/ .*//" | python /afs/cern.ch/user/p/pseyfert/lb-zsh/mysort.py))
     _describe -V 'project versions' versionlist
     return
   fi
