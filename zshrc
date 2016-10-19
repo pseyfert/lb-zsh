@@ -34,8 +34,9 @@ compdef _gnu_generic ganga
 # > SetupProject GUESS
 # > Lbglimpse <searchterm> GUESS
 # > Lbglimpse <searchterm> GUESSAGAIN
-alias -g 'GUESS'='$(pwd | sed "s/.*cmtuser\/\([^\/]*\)_\([^\/]*\).*/\1 \2/")'
+alias -g 'GUESS'='$(pwd | sed "s/.*cmtuser\/\([^\/]*\)_\([^\/]*\).*/\1 \2/" | sed "s/Dev//" )'
 alias -g 'GUESSAGAIN'='${GAUDIAPPNAME} ${GAUDIAPPVERSION}'
+alias -g 'EOS'='root://eoslhcb.cern.ch/'
 
 # expand PROMPT by current project, but don't pile up modifications
 # http://www.nparikh.org/unix/prompt.php#zsh
@@ -129,3 +130,22 @@ else
   echo "not importing tmpaliases"
 fi
 export GANGASCRIPTS='/afs/cern.ch/user/p/pseyfert/gangascripts'
+
+mylxplus() {
+  if [ $# -eq 0 ] ; then
+    echo "go directly"
+    ssh -t lxplus '/afs/cern.ch/user/p/pseyfert/.local-with-etc/bin/zsh'
+    return $?
+  fi
+  for arg ;
+  do 
+    if [ "${arg:0:1}" != "-" ] ; then
+      echo "go to special host"
+      echo "go to host" $arg
+      ssh -t $@ '/afs/cern.ch/user/p/pseyfert/.local-with-etc/bin/zsh'
+      return $?
+    fi
+  done
+  echo "go with arguments"
+  ssh -t $@ lxplus '/afs/cern.ch/user/p/pseyfert/.local-with-etc/bin/zsh'
+}
