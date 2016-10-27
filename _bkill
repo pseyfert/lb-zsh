@@ -1,3 +1,7 @@
 #compdef bkill
 
-_alternative "jobid:JOBID:($(bjobs -noheader -o jobid))"
+local -a thejobs
+for v in $(bjobs -noheader -o 'jobid: job_name delimiter=":"'); do
+  thejobs+=("$v")
+done
+_describe -t jobid 'JobID' thejobs
