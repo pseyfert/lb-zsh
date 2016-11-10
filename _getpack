@@ -9,11 +9,28 @@
 #    Phys/CommonParticlesArchive                Stripping
 #
 
-_arguments '1:packages:->packagelookup'
+_arguments -C -S -A "-*" '1:packages:->packagelookup' '2:tag:->tags'
 case $state in
   (packagelookup)
     packages=($(svn pg packages http://svn.cern.ch/guest/lhcb | sed "s/  *.*//"))
     _describe 'packages' packages
+    ;;
+  (tags)
+    local -a alts
+    local -a tags
+    local project
+    alts=()
+    tags=()
+    (( prev = $CURRENT - 1 ))
+
+    # get corresponding project from list of packages to get svn location
+    project=$(svn pg packages http://svn.cern.ch/guest/lhcb | grep $words[$prev] | sed "s/.*  *//")
+    # list the tags directory and remove trailing slash from ls (tags are directories)
+    tags+=($(svn ls http://svn.cern.ch/guest/lhcb/$project/tags/$words[$prev] | sed "s/\///g"))
+
+    alts+=('trunk:trunk:(head)')
+    alts+=("tags:tags:(${tags})")
+    _alternative "$alts[@]"
     ;;
 esac
 
