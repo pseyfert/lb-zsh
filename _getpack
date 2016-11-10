@@ -12,7 +12,7 @@
 _arguments -C -S -A "-*" '1:packages:->packagelookup' '2:tag:->tags'
 case $state in
   (packagelookup)
-    packages=($(svn pg packages http://svn.cern.ch/guest/lhcb | sed "s/  *.*//"))
+    packages=($(svn pg packages http://svn.cern.ch/guest/lhcb | sed "s/  *.*//")) 2> /dev/null
     _describe 'packages' packages
     ;;
   (tags)
@@ -24,9 +24,9 @@ case $state in
     (( prev = $CURRENT - 1 ))
 
     # get corresponding project from list of packages to get svn location
-    project=$(svn pg packages http://svn.cern.ch/guest/lhcb | grep $words[$prev] | sed "s/.*  *//")
+    project=$(svn pg packages http://svn.cern.ch/guest/lhcb | grep $words[$prev] | sed "s/.*  *//") 2> /dev/null
     # list the tags directory and remove trailing slash from ls (tags are directories)
-    tags+=($(svn ls http://svn.cern.ch/guest/lhcb/$project/tags/$words[$prev] | sed "s/\///g"))
+    tags+=($(svn ls http://svn.cern.ch/guest/lhcb/$project/tags/$words[$prev] | sed "s/\///g")) 2> /dev/null
 
     alts+=('trunk:trunk:(head)')
     alts+=("tags:tags:(${tags})")
