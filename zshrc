@@ -34,7 +34,13 @@ compdef _gnu_generic ganga
 # > SetupProject GUESS
 # > Lbglimpse <searchterm> GUESS
 # > Lbglimpse <searchterm> GUESSAGAIN
-alias -g 'GUESS'='$(pwd | sed "s/.*cmtuser\/\([^\/]*\)_\([^\/]*\).*/\1 \2/" | sed "s/Dev//" )'
+guess() {
+  [[ -n ${GAUDIAPPNAME} ]] && echo ${GAUDIAPPNAME} ${GAUDIAPPVERSION} || \
+    pwd | sed "s/.*cmtuser\/\([^\/]*\)_\([^\/]*\).*/\1 \2/" | sed "s/Dev//" | \grep " v" || \
+    lb-run -l DaVinci | sed "s/ .*//" | sort -r -V | uniq | python /afs/cern.ch/user/p/pseyfert/lb-zsh/mysort.py | head -1 | sed "s/^/DaVinci /"
+}
+alias -g 'GUESS'='$(guess)'
+alias -g 'OLDGUESS'='$(pwd | sed "s/.*cmtuser\/\([^\/]*\)_\([^\/]*\).*/\1 \2/" | sed "s/Dev//" )'
 alias -g 'GUESSAGAIN'='${GAUDIAPPNAME} ${GAUDIAPPVERSION}'
 alias -g 'EOS'='root://eoslhcb.cern.ch/'
 
