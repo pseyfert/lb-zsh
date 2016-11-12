@@ -21,19 +21,8 @@ __projects () {
   _describe 'projects' projects
 }
 __runnablestuff () {
-  if [ $CURRENT -eq 4 ] ; then
-    _alternative ':commonly used commands:(($common_commands))' \
-      'currently available commands::_command_names -e'
-  else
-    precommands+=($words[1])
-    for ((i = $CURRENT; i > 2; i--));
-    do
-      shift words
-      (( CURRENT-- ))
-    done
-    
-    _normal
-  fi
+  _alternative ':commonly used commands:(($common_commands))' \
+    'currently available commands::_command_names -e:*::program arguments: _normal'
 }
 __list_versions () {
   if [ $CURRENT -eq 3 ] ; then
