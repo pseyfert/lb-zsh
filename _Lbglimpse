@@ -1,0 +1,28 @@
+#compdef Lbglimpse
+
+_Lbglimpse()
+{
+  local -a projects
+  projects=(Brunel Bender DaVinci Moore Urania Erasmus Tesla Gauss)
+
+  _arguments '1:search term:' '2: :->project' '3: :->version'
+
+  case $state in
+    (project)
+      local -a alts
+      alts=()
+      [[ -n ${GAUDIAPPNAME} ]] && alts+=("current:current project:(${GAUDIAPPNAME})")
+      alts+=('current:current project:(GUESS)')
+      alts+=("common:common projects:($projects)")
+      _alternative "$alts[@]"
+      ;;
+    (version)
+      [[ $words[(($CURRENT - 1))] = GUESS ]] && return 1
+      [[ -n ${GAUDIAPPNAME} && $words[(($CURRENT - 1))] = ${GAUDIAPPNAME} ]] && alts+=("current:current project:(${GAUDIAPPVERSION})")
+      versionlist=($(lb-run -l $words[(($CURRENT - 1))] | sed "s/ .*//" | sort -r -V | uniq | python /afs/cern.ch/user/p/pseyfert/lb-zsh/mysort.py))
+      alts+=("vers:available versions:($versionlist)")
+      _alternative "$alts[@]"
+  esac
+}
+
+_Lbglimpse "$@"
