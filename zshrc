@@ -3,13 +3,7 @@
 
 ## _gnu_generic parses the --help output, such that `root-config -<tab>` will
 #show the possible options and their explanation
-compdef _gnu_generic root
 compdef _gnu_generic root-config
-
-# beyond the option completion, root should be called for .root files and .C
-# files only (please no .py, .txt, .jpg, ...
-# but directory paths should also be allowed
-compctl -g '*(-/) *(root|C)' + g '*(-/)' root
 
 # dst-dump, dst-explorer, and bender have well written help messages, too
 compdef _gnu_generic dst-dump

@@ -1,0 +1,47 @@
+#compdef root hadd
+
+# the prefix fails when suppyling wildcards on eos
+
+_rootcomp() {
+  local expl
+  if [[ $words[$CURRENT] == /eos* || $words[$CURRENT] == root://eoslhcb.cern.ch/* ]]; then
+    _alternative 'fi:file on eos:_path_files -P "root://eoslhcb.cern.ch/"  -g "*(/) *.(root|C)"'
+  else
+    _wanted arguments expl "LHCb EOS access protocol" compadd "root://eoslhcb.cern.ch/"
+    # FIXME: avoid duplications
+    _path_files -g '*(/) *.(root|C)'
+  fi
+  [[ $words[$CURRENT] == -* && $words[1] == root ]] && _gnu_generic
+  if [[ $words[$CURRENT] == -* && $words[1] == hadd ]] ; then
+    filepresent=false
+    for (( i = 2; i < ${#words[@]}; i++ )) do
+      if [[ ! $words[$i] == -* ]] ; then
+        filepresent=true
+        break
+      fi
+    done
+    if [[ "$filepresent" == false ]] ; then
+      _arguments \
+        '-a[append to output]' \
+        "-k[don't exit on corrupt or non-existant input files]" \
+        "-T[don't merge trees]" \
+        "-O[re-optimize tree baskets]" \
+        "-v[verbosity level: 0 request no output, 99 is the default]" \
+        "-n[open at most 'maxopenedfiles' at once, use 0 to request to use the system maximum]" \
+        "-f[overwrite output file if exits]" \
+        "-ff[compression level is the one specified in the first input]"
+    else
+      _message "no options after the first filename"
+    fi
+  fi
+  #By default the compression level is 1, but
+  #if "-fk" is specified, the target file contain the baskets with the same compression as in the input files 
+  #    unless -O is specified.  The meta data will be compressed using the compression level specified in the first
+  #      input or the compression setting specified follow fk (206 when using -fk206 for example)
+  #        if "-f0" is specified, the target file will not be compressed.
+  #          if "-f6" is specified, the compression level 6 will be used.  See  TFile::SetCompressionSettings for the support range of value.
+
+
+}
+
+_rootcomp "$@"
