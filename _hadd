@@ -8,8 +8,10 @@ _rootcomp() {
     _alternative 'fi:file on eos:_path_files -P "root://eoslhcb.cern.ch/"  -g "*(/) *.(root|C)"'
   else
     _wanted arguments expl "LHCb EOS access protocol" compadd "root://eoslhcb.cern.ch/"
-    # FIXME: avoid duplications
-    _path_files -g '*(/) *.(root|C)'
+    # duplicate files are avoided by
+    # zstyle ':completion::*:hadd:*:*file*' ignore-line true
+    [[ $words[1] == root ]] && _path_files -g '*(/) *.(root|C)'
+    [[ $words[1] == hadd ]] && _path_files -g '*(/) *.root'
   fi
   [[ $words[$CURRENT] == -* && $words[1] == root ]] && _gnu_generic
   if [[ $words[$CURRENT] == -* && $words[1] == hadd ]] ; then

@@ -108,6 +108,11 @@ _expand_alias_and_complete() {
 }
 zstyle ':completion:*' completer _complete _expand_alias_and_complete
 
+# don't suggest a file more than once
+zstyle ':completion::*:hadd:*:*file*' ignore-line true
+zstyle ':completion::*:root:*:*file*' ignore-line true
+
+
 
 alias -g 'ZSH'='/afs/cern.ch/user/p/pseyfert/.local/bin/zsh'
 MYLBRUN() {
