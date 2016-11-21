@@ -47,3 +47,7 @@ _rootcomp() {
 }
 
 _rootcomp "$@"
+
+# don't suggest a file more than once
+zstyle ':completion::*:hadd:*:*file*' ignore-line true
+zstyle ':completion::*:root:*:*file*' ignore-line true
