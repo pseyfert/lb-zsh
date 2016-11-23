@@ -26,3 +26,6 @@ _Lbglimpse()
 }
 
 _Lbglimpse "$@"
+
+zstyle ':completion::*:Lbglimpse:*:*' sort false
+
