@@ -18,7 +18,7 @@ projects=(Brunel Bender DaVinci Moore Urania Erasmus Tesla Gauss LHCbDirac Ganga
 #_describe 'projects' projects
 
 __projects () {
-  _describe 'projects' projects
+  compadd "$@" -S '/' ${projects}
 }
 __runnablestuff () {
   if [ $CURRENT -eq 1 ]; then
@@ -27,17 +27,15 @@ __runnablestuff () {
   _normal
 }
 __list_versions () {
-  if [ $CURRENT -eq 3 ] ; then
+  if [ $CURRENT -eq 2 ] ; then
     local -a versionlist
-    # see lb-dev completion for explanation (this is copy&paste here)
     versionlist=($(lb-run -l $@ | sed "s/ .*//" | sort -r -V | uniq | python /afs/cern.ch/user/p/pseyfert/lb-zsh/mysort.py))
     # FIXME: do version sorting in python
     #versionlist=($(lb-run -l $@ | sed "s/ .*//" | python /afs/cern.ch/user/p/pseyfert/lb-zsh/mysort.py))
     _describe -V 'project versions' versionlist
     return
   fi
-  shift 3 words
-  (( CURRENT-- ))
+  shift 2 words
   (( CURRENT-- ))
   (( CURRENT-- ))
   __runnablestuff
@@ -50,38 +48,58 @@ __check_nightlies() {
     (( CURRENT-- ))
   done
   if [ $CURRENT -eq 2 ] ; then
-    _alternative '::__projects' ':nightly:((--nightly\:"run nightlies"))'
+    if compset -P 1 '*/'; then
+      project=${(S)IPREFIX#/}
+      __list_versions $project
+    else
+      _alternative 'projects:Projects:__projects' 'nightlyswitch:nightly:((--nightly\:"run nightlies"))'
+    fi
   elif [ "$words[2]" = "--nightly" ] ; then
     if [ $CURRENT -eq 3 ] ; then
       # slot mandatory
       _alternative ':slots:((lhcb-head lhcb-upgradeTracking))'
     elif [ $CURRENT -eq 4 ] ; then
       # either day or project
-      _alternative '::__projects' ':days:(($days))'
+      if compset -P 1 '*/'; then
+        project=${(S)IPREFIX#/}
+        slot=$words[3]
+        shift 2 words
+        (( CURRENT-- ))
+        (( CURRENT-- ))
+        __list_versions "--nightly" $slot $project
+      else
+        _alternative 'projects:Projects:__projects' 'days:days:(($days))'
+      fi
     elif [[ $CURRENT -eq 5 && ${days[(r)$words[4]]} == $words[4] ]] ; then
       #http://stackoverflow.com/questions/5203665/zsh-check-if-string-is-in-array
       # if previous was day, then project
-      __projects
-    else
-      # now version (and forwarding)
-      slot=$words[3]
-      local -a day
-      if [[ ${days[(r)$words[4]]} == $words[4] ]] ; then
+
+      if compset -P 1 '*/'; then
+        project=${(S)IPREFIX#/}
+        slot=$words[3]
+        local -a day
         day=$words[4]
-        shift words
+        shift 3 words
         (( CURRENT-- ))
+        (( CURRENT-- ))
+        (( CURRENT-- ))
+        __list_versions "--nightly" $slot $day $project
       else
+        _alternative ':Projects:__projects'
       fi
-      project=$words[4]
-      shift words
-      shift words
+    elif [[ ${days[(r)$words[4]]} == $words[4] ]] ; then
+      # we're now forwarding to _normal, there was a day in the command line
+      shift 3 words
       (( CURRENT-- ))
       (( CURRENT-- ))
-      if [ -z "$day" ] ; then
-        __list_versions "--nightly" $slot $words[2]
-      else
-        __list_versions "--nightly" $slot $day $words[2]
-      fi
+      (( CURRENT-- ))
+      __list_versions
+    else
+      # we're now forwarding to _normal, there was no day in the command line
+      shift 2 words
+      (( CURRENT-- ))
+      (( CURRENT-- ))
+      __list_versions
     fi
   else
     # suggest version, or forward further
@@ -96,5 +114,5 @@ __listcmt () {
 }
 
 integer NORMARG
-_arguments -n '-l[list versions]' '-c[specify platform]:CMTCONFIG:__listcmt' '*: :__check_nightlies'
+_arguments -n '-l[list versions]' '-c[specify platform]:CMTCONFIG:__listcmt' '(- 1)*: :__check_nightlies'
 

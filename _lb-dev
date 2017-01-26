@@ -2,6 +2,7 @@
 
 local -a projects
 local -a days
+days=(Mon Tue Wed Thu Fri Sat Sun today)
 
 # hard coded list of possible projects (I assume non-application projects like
 # Phys will not be used ...)
@@ -9,16 +10,12 @@ projects=(Brunel Bender DaVinci Moore Urania Erasmus Tesla Gauss)
 #_describe 'projects' projects
 
 __projects () {
-  _describe 'projects' projects
+  compadd "$@" -S '/' ${projects}
 }
 __list_versions_dev () {
-  if [ $CURRENT -eq 3 ] ; then
-    local -a versionlist
-    # see lb-dev completion for explanation (this is copy&paste here)
-    versionlist=($(lb-run -l $@ | sed "s/ .*//" | sort -r -V | uniq))
-    _describe -V 'project versions' versionlist
-    return
-  fi
+  local -a versionlist
+  versionlist=($(lb-run -l $@ | sed "s/ .*//" | sort -r -V | uniq | python /afs/cern.ch/user/p/pseyfert/lb-zsh/mysort.py))
+  _describe -V 'project versions' versionlist
 }
 
 __check_nightlies_dev() {
@@ -28,43 +25,41 @@ __check_nightlies_dev() {
     (( CURRENT-- ))
   done
   if [ $CURRENT -eq 2 ] ; then
-    _alternative '::__projects' ':nightly:((--nightly\:"run nightlies"))'
+    if compset -P 1 '*/'; then
+      project=${(S)IPREFIX#/}
+      __list_versions_dev $project
+    else
+      _alternative 'projects:Projects:__projects' 'nightlyswitch:nightly:((--nightly\:"run nightlies"))'
+    fi
   elif [ "$words[2]" = "--nightly" ] ; then
     if [ $CURRENT -eq 3 ] ; then
       # slot mandatory
       _alternative ':slots:((lhcb-head lhcb-upgradeTracking))'
     elif [ $CURRENT -eq 4 ] ; then
       # either day or project
-      _alternative '::__projects' ':days:(($days))'
+      if compset -P 1 '*/'; then
+        project=${(S)IPREFIX#/}
+        slot=$words[3]
+        __list_versions_dev "--nightly" $slot $project
+      else
+        _alternative 'projects:Projects:__projects' 'days:days:(($days))'
+      fi
     elif [[ $CURRENT -eq 5 && ${days[(r)$words[4]]} == $words[4] ]] ; then
       #http://stackoverflow.com/questions/5203665/zsh-check-if-string-is-in-array
       # if previous was day, then project
-      __projects
-    else
-      # now version (and forwarding)
-      slot=$words[3]
-      local -a day
-      if [[ ${days[(r)$words[4]]} == $words[4] ]] ; then
+
+      if compset -P 1 '*/'; then
+        project=${(S)IPREFIX#/}
+        slot=$words[3]
+        local -a day
         day=$words[4]
-        shift words
-        (( CURRENT-- ))
+        __list_versions_dev "--nightly" $slot $day $project
       else
-      fi
-      project=$words[4]
-      shift words
-      shift words
-      (( CURRENT-- ))
-      (( CURRENT-- ))
-      if [ -z "$day" ] ; then
-        __list_versions_dev "--nightly" $slot $words[2]
-      else
-        __list_versions_dev "--nightly" $slot $day $words[2]
+        _alternative ':Projects:__projects'
       fi
     fi
-  else
-    # suggest version, or forward further
-    __list_versions_dev $words[2]
   fi
+  # no idea
 
 }
 __listcmt () {
@@ -74,5 +69,5 @@ __listcmt () {
 }
 
 integer NORMARG
-_arguments -n '-l[list versions]' '--name=[name for the local directory]:' '-c[specify platform]:CMTCONFIG:__listcmt' '*: :__check_nightlies_dev'
+_arguments -n '-l[list versions]' '-L[list platforms]' '--name=[name for the local directory]:' '-c[specify platform]:CMTCONFIG:__listcmt' '(- 1)*: :__check_nightlies_dev' '(--debug --quiet --verbose)--debug[print debug messages]' '(--debug --quiet --verbose)--quiet[print only warning messages (default)]' '(--debug --quiet --verbose)--verbose[print more information]'
 
