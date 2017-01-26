@@ -121,13 +121,27 @@ MYZSH() {
 }
 compdef _lb-run MYLBRUN
 
+SCREEN() {
+  local ret
+  local deletealiasfile=false
+  alias -L > $HOME/.screenaliases && deletealiasfile=true
+  k5reauth -f -i 3600 -p $(whoami) -k $HOME/tab/$(whoami).keytab -- screen -t ZSH
+  ret=$?
+  #[[ "$deletealiasfile" == true ]] && rm $HOME/.screenaliases
+  return ret
+}
+
 if [ -e $HOME/.tmpaliases ]; then
-  echo "importing tmpaliases"
+  echo "importing aliases from .tmpaliases"
   source $HOME/.tmpaliases
   rm $HOME/.tmpaliases
+elif [[ $TERM == "screen" ]]; then
+  echo "importing aliases from .screenaliases"
+  source $HOME/.screenaliases
 else
-  echo "not importing tmpaliases"
+  echo "not importing aliases"
 fi
+
 export GANGASCRIPTS='/afs/cern.ch/user/p/pseyfert/gangascripts'
 
 mylxplus() {
@@ -148,3 +162,6 @@ mylxplus() {
   echo "go with arguments"
   ssh -t $@ lxplus '/afs/cern.ch/user/p/pseyfert/.local-with-etc/bin/zsh'
 }
+
+[[ ! -n $X509_VOMS_DIR ]] && export X509_VOMS_DIR=/cvmfs/grid.cern.ch/etc/grid-security/vomsdir
+[[ ! -n $X509_CERT_DIR ]] && export X509_CERT_DIR=/cvmfs/grid.cern.ch/etc/grid-security/certificates
