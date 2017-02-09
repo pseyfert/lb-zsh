@@ -163,5 +163,11 @@ mylxplus() {
   ssh -t $@ lxplus '/afs/cern.ch/user/p/pseyfert/.local-with-etc/bin/zsh'
 }
 
+export LSB_BJOBS_FORMAT='jobid: stat: queue: job_name:58 submit_time: start_time:'
+bkillall() {
+  bjobs
+  read -q "REPLY?really want to kill all these jobs?" && bkill $(bjobs -noheader -o "jobid")
+}
+
 [[ ! -n $X509_VOMS_DIR ]] && export X509_VOMS_DIR=/cvmfs/grid.cern.ch/etc/grid-security/vomsdir
 [[ ! -n $X509_CERT_DIR ]] && export X509_CERT_DIR=/cvmfs/grid.cern.ch/etc/grid-security/certificates

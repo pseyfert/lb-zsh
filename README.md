@@ -91,6 +91,12 @@ the job name.
 ## bkill
 suggest lxbatch job ids
 
+## bjobs
+modified default listing
+
+## bkillall
+function to kill all lxbatch jobs (asks for confirmation)
+
 ## gaudirun.py
 complete .py and .opts files and suggest options from --help
 
