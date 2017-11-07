@@ -38,7 +38,10 @@ stackoverflow/stackexchange posts which helped:
 # feature list
 
 ## git-lb-use
-`git lb-use` completes from a list of hard coded projects.
+`git lb-use` completes
+ * its command line options (e.g. connection protocol)
+ * projects from a list of hard coded projects
+ * suggests url stubs (cern gitlab, with its ports)
 
 ## git-lb-checkout
 the git-lb-checkout command gets completed as:

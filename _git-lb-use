@@ -1,7 +1,37 @@
 #compdef git-lb-use
 
-local -a projects
+__projects () {
+  local -a projects
+  projects=(Stripping Phys Rec Analysis Hlt Online Brunel Moore DaVinci Tesla Urania Erasmus Gauss LHCb)
+  _values 'projects' "${projects[@]}"
+}
 
-projects=(Stripping Phys Rec Analysis Hlt Online Brunel Moore DaVinci Tesla Urania Erasmus Gauss LHCb)
+__pick_protocol () {
+  local -a protocols
+  protocols=(krb5 https ssh)
+  _values 'PROTOCOL' "${protocols[@]}"
+}
 
-_describe 'project' projects
+
+_cernurls () {
+  local -a cernurls
+  cernurls=('ssh://git@gitlab.cern.ch:7999/' 'https://:@gitlab.cern.ch:8443/' 'https://gitlab.cern.ch/')
+  _wanted arguments expl "CERN gitlab urls" compadd -S '' $cernurls
+}
+
+_myurls () {
+  local alternatives
+  alternatives=('cern:CERN gitlab urls:_cernurls')
+  alternatives+=('internet:standard urls:_urls')
+  _alternative "${alternatives[@]}"
+}
+
+local -a arguments
+arguments=(
+    '(-v --verbose -q --quiet)'{-v,--verbose}'[be more verbose]'
+    '(-q --quiet -v --verbose)'{-q,--quiet}'[be more quiet]'
+    '(-p --protocol)'{-p,--protocol}'[specify connection protocol]:PROTOCOL:__pick_protocol'
+    '(-)1: :__projects'
+    '2:[project url (if default is not desired)]:_myurls'
+)
+_arguments -n $arguments
