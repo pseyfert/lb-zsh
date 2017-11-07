@@ -7,7 +7,7 @@ _arguments '-c:CMTCONFIG:->listcmt' ':::->whatelse'
 case $state in
   (listcmt)
     local -a theenvs
-    theenvs=(x86_64-slc6-gcc48-dbg x86_64-slc6-gcc48-opt x86_64-slc6-gcc49-dbg x86_64-slc6-gcc49-do0 x86_64-slc6-gcc49-opt)
+  theenvs=(x86_64-slc6-gcc62-dbg x86_64-slc6-gcc62-opt x86_64-slc6-gcc48-dbg x86_64-slc6-gcc48-opt x86_64-slc6-gcc49-dbg x86_64-slc6-gcc49-do0 x86_64-slc6-gcc49-opt)
     _describe 'cmtconfig' theenvs
     ;;
   (whatelse)
