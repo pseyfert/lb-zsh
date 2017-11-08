@@ -42,6 +42,10 @@ __list_versions () {
 }
 
 __check_nightlies() {
+  for ((i = 1 ; i <= $CURRENT ; i++))
+  do
+    if [ "$words[$i]" = "-c" ] ; then localcmtconfig=$words[$(( i+1 ))] ; fi
+  done
   for ((i = $NORMARG; i > 2; i--));
   do
     shift words
@@ -50,7 +54,11 @@ __check_nightlies() {
   if [ $CURRENT -eq 2 ] ; then
     if compset -P 1 '*/'; then
       project=${(S)IPREFIX#/}
-      __list_versions $project
+      if [ ${+localcmtconfig} ] ; then
+        __list_versions "-c" $localcmtconfig $project
+      else
+        __list_versions $project
+      fi
     else
       _alternative 'projects:Projects:__projects' 'nightlyswitch:nightly:((--nightly\:"run nightlies"))'
     fi
@@ -66,7 +74,11 @@ __check_nightlies() {
         shift 2 words
         (( CURRENT-- ))
         (( CURRENT-- ))
-        __list_versions "--nightly" $slot $project
+        if [ ${+localcmtconfig} ] ; then
+          __list_versions "-c" $localcmtconfig "--nightly" $slot $project
+        else
+          __list_versions "--nightly" $slot $project
+        fi
       else
         _alternative 'projects:Projects:__projects' 'days:days:(($days))'
       fi
@@ -83,7 +95,11 @@ __check_nightlies() {
         (( CURRENT-- ))
         (( CURRENT-- ))
         (( CURRENT-- ))
-        __list_versions "--nightly" $slot $day $project
+        if [ ${+localcmtconfig} ] ; then
+          __list_versions "-c" $localcmtconfig "--nightly" $slot $day $project
+        else
+          __list_versions "--nightly" $slot $day $project
+        fi
       else
         _alternative ':Projects:__projects'
       fi
