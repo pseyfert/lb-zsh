@@ -134,13 +134,19 @@ SCREEN() {
   return ret
 }
 
+CENTSCREEN() {
+  alias -L > $HOME/.screenaliases_cent && deletealiasfile=true
+  k5reauth -f -i 3600 -p $(whoami) -k $HOME/tab/$(whoami).keytab -- screen -c .screenrc.centos
+  return $?
+}
+
 if [ -e $HOME/.tmpaliases ]; then
   echo "importing aliases from .tmpaliases"
   source $HOME/.tmpaliases
   rm $HOME/.tmpaliases
 elif [[ $TERM == "screen" ]]; then
-  echo "importing aliases from .screenaliases"
-  source $HOME/.screenaliases
+  echo "importing aliases for screen"
+  grep CentOS /etc/redhat-release > /dev/null && source $HOME/.screenaliases_cent || source $HOME/.screenaliases
 else
   echo "not importing aliases"
 fi
