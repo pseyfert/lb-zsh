@@ -57,6 +57,9 @@ fi
 # FIXME: path where zshrun actually is...
 source ~/lb-zsh/zshrun
 
+# eos quota alias for "normal people"
+alias EOS_user_quota='EOS_MGM_URL=root://eosuser.cern.ch eos quota | head -6 | tail -2'
+
 setopt complete_aliases
 
 _SetupAlias() {
