@@ -1,6 +1,32 @@
 #put the following line (with the correct path) in your ~/.zshrc
 #fpath=(/path/to/lb-zsh $fpath)
 
+# preemptive define __git_remote_repositories unless already defined
+# i.e. must be done before _git tab completion is loaded
+# If so, suggest standard (krb5) cern gitlab url
+# dropping the "normal" feature, though could be included here:
+#
+# (( $+functions[__git_remote_repositories] )) ||
+# __git_remote_repositories () {
+#   local service
+# 
+#   service= _ssh
+# 
+#   if compset -P '*:'; then
+#     _remote_files -/ -- ssh
+#   else
+#     _ssh_hosts -S:
+#   fi
+# }
+# also other hosters (github.com) could be added, but the only hard one imho is
+# the ://:@ and the 8443.
+(( $+functions[__git_remote_repositories] )) ||
+__git_remote_repositories () {
+  local hosters; hosters=("https\://\:@gitlab.cern.ch\:8443:cern gitlab with kerberos")
+  _describe -t 'git-hosters' 'host to clone from' hosters -qS/
+}
+
+
 ## _gnu_generic parses the --help output, such that `root-config -<tab>` will
 #show the possible options and their explanation
 compdef _gnu_generic root-config
