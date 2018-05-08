@@ -204,5 +204,7 @@ bkillall() {
   read -q "REPLY?really want to kill all these jobs?" && bkill $(bjobs -noheader -o "jobid")
 }
 
+export CMAKEFLAGS="${CMAKEFLAGS} -DGAUDI_DIAGNOSTICS_COLOR=ON"
+
 [[ ! -n $X509_VOMS_DIR ]] && export X509_VOMS_DIR=/cvmfs/grid.cern.ch/etc/grid-security/vomsdir
 [[ ! -n $X509_CERT_DIR ]] && export X509_CERT_DIR=/cvmfs/grid.cern.ch/etc/grid-security/certificates
