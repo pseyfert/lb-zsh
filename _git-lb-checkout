@@ -1,28 +1,49 @@
 #compdef git-lb-checkout
 
+###############################################################################
+# (c) Copyright 2018 CERN                                                     #
+#                                                                             #
+# This software is distributed under the terms of the GNU General Public      #
+# Licence version 3 (GPL Version 3), copied verbatim in the file "COPYING".   #
+#                                                                             #
+# In applying this licence, CERN does not waive the privileges and immunities #
+# granted to it by virtue of its status as an Intergovernmental Organization  #
+# or submit itself to any jurisdiction.                                       #
+###############################################################################
+
 # should be
-#    > git lb-checkout Stripping/master Phys/StrippingSelections
+#    > git lb-checkout Stripping/master                    Phys/StrippingSelections
+#                      <remote>/<branch(or commit or tag)> <directory(or file)>
 #
-# could be built from
+# while tempting to build from
 #    > git remote show -n
 #    Stripping
 #    DaVinci
 #
-# need to figure out remote branch names instead of remotes
+# afterwards one anyhow needs to figure out remote branch names instead of remotes
 # -> can be looked up in the git-checkout function
-# 
+#
 # packagelookup copied from _git-ls-tree
 # projectlookup *not* copied from _git-ls-tree, to get *only* remote tree-ish things
+
 local curcontext=$curcontext state line ret=1
 declare -A opt_args
-_arguments '1:project:->projectlookup' '2:packages:->packagelookup' && ret=0
+_arguments '(-c --commit --no-commit)'{-c,--commit}'[commit immediately after checkout(default)]' \
+           '(-c --commit --no-commit)--no-commit[do not commit after checkout]' \
+           '(-)1:project:->projectlookup' \
+           '(-)2:packages:->packagelookup' \
+           && ret=0
+
 case $state in
-  (packagelookup)
-    __git_ignore_line __git_tree_files ${PREFIX:-.} $line[1] && ret=0
-    ;;
-  (projectlookup)
-    _alternative 'branches::__git_remote_branch_names' 'tags::__git_tags' && ret=0
-    ;;
+	(packagelookup)
+		if __git_ignore_line __git_tree_files ${PREFIX:-.} $line[1]; then
+			ret=0
+		else
+			__git_ignore_line __git_tree_files ${PREFIX:-.}/ $line[1] && ret=0 || _message "maybe add a trailing slash: /"
+		fi
+		;;
+	(projectlookup)
+		_alternative 'branches::__git_remote_branch_names' 'tags::__git_tags' && ret=0  ;;
 esac
 
 return ret
