@@ -1,0 +1,11 @@
+language: sh
+sudo: true
+
+before_script:
+    - sudo apt update -y
+    - sudo apt install -y zsh
+
+script:
+    - zsh -c 'fpath=$(pwd); autoload -Uz +X _git-lb-push'
+    - zsh -c 'fpath=$(pwd); autoload -Uz +X _git-lb-checkout'
+    - zsh -c 'fpath=$(pwd); autoload -Uz +X _git-lb-use'
