@@ -2,6 +2,7 @@ language: sh
 sudo: true
 
 before_script:
+    - sudo apt update -y
     - sudo apt install -y zsh
 
 script:
