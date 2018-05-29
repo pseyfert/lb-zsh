@@ -1,16 +1,38 @@
 #compdef git-lb-push
 
-# should be
-#    > git lb-push Stripping your_new_branchname
-#
+###############################################################################
+# (c) Copyright 2018 CERN                                                     #
+#                                                                             #
+# This software is distributed under the terms of the GNU General Public      #
+# Licence version 3 (GPL Version 3), copied verbatim in the file "LICENSE".   #
+#                                                                             #
+# In applying this licence, CERN does not waive the privileges and immunities #
+# granted to it by virtue of its status as an Intergovernmental Organization  #
+# or submit itself to any jurisdiction.                                       #
+###############################################################################
 
-_arguments '1:project:->projectlookup' '2:branch:->branchnames'
+# should be
+#    > git lb-push <project> <remote branch name>
+
+local -a arguments
+arguments=(
+    '(-v --verbose -q --quiet -d --debug)'{-d,--debug}'[be very verbose]'
+    '(-v --verbose -q --quiet -d --debug)'{-v,--verbose}'[be more verbose]'
+    '(-q --quiet -v --verbose -d --debug)'{-q,--quiet}'[be more quiet]'
+    '--version[display version information]'
+    '--help[display help message]'
+    '--keep-temp-branch[keep temporary branch for after push]'
+    '1:project:->projectlookup'
+    '2:branch:->branchnames'
+)
+
+_arguments -n $arguments
 case $state in
-  (branchnames)
-    _alternative 'branches::__git_remote_branch_names_noprefix'
-    ;;
   (projectlookup)
     _alternative 'projects::__git_remotes'
     ;;
+  (branchnames)
+    _message "When creating a new branch, please begin with your username."
+    _alternative 'branches::__git_remote_branch_names_noprefix'
+    ;;
 esac
-
