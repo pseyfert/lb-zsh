@@ -30,6 +30,11 @@ local curcontext=$curcontext state line ret=1
 declare -A opt_args
 _arguments '(-c --commit --no-commit)'{-c,--commit}'[commit immediately after checkout(default)]' \
            '(-c --commit --no-commit)--no-commit[do not commit after checkout]' \
+           '(-v --verbose -q --quiet -d --debug)'{-d,--debug}'[be very verbose]' \
+           '(-v --verbose -q --quiet -d --debug)'{-v,--verbose}'[be more verbose]' \
+           '(-q --quiet -v --verbose -d --debug)'{-q,--quiet}'[be more quiet]' \
+           '--version[display version information]' \
+           '--help[display help message]' \
            '(-)1:project:->projectlookup' \
            '(-)2:packages:->packagelookup' \
            && ret=0
