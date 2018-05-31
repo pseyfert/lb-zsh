@@ -1,0 +1,66 @@
+#compdef lb-docker-run
+
+# zsh completion for lb-docker-run
+
+###############################################################################
+# (c) Copyright 2018 CERN                                                     #
+#                                                                             #
+# This software is distributed under the terms of the GNU General Public      #
+# Licence version 3 (GPL Version 3), copied verbatim in the file "COPYING".   #
+#                                                                             #
+# In applying this licence, CERN does not waive the privileges and immunities #
+# granted to it by virtue of its status as an Intergovernmental Organization  #
+# or submit itself to any jurisdiction.                                       #
+###############################################################################
+
+# based on the --help message of lb-docker-run version 2 image-tag v3 (lbscripts v9r2p6)
+# and heavily borrowed from the docker completion
+#
+# zsh completion for docker (http://docker.com)
+#
+# version:  0.3.0
+# github:   https://github.com/felixr/docker-zsh-completion
+
+
+integer ret=1
+
+_arguments \
+  '(: -)'{-h,--help}'[show this help message and exit]' \
+  '(: -)--version[Print version information and quit]' \
+  '(--slc5 --slc6 --centos7)--centos7[Run an centos7 container]' \
+  '(--slc5 --slc6 --centos7)--slc5[Run an slc5 container]' \
+  '(--slc5 --slc6 --centos7)--slc6[Run an slc6 container, default one]' \
+  '(-c --platform)'{-c,--platform=}'[runtime platform]: _message "platform"' \
+  '--force-cvmfs[Mount cvmfs in the container even if available on the host]' \
+  '--no-cvmfs[Do not use cvmfs]' \
+  '--home[Set a persistent home for this image]' \
+  '--kerberos[Forward the kerberos ticket to the container]' \
+  '(--interactive --no-interactive)--interactive[Give an interactive shell to this container]' \
+  '(--interactive --no-interactive)--no-interactive[Do not give an interactive shell to this container]' \
+  '(--lblogin --no-lblogin)--lblogin[Enable LHCb environment]' \
+  '(--lblogin --no-lblogin)--no-lblogin[Do not enable LHCb environment]' \
+  '--ssh-agent[Forward host ssh-agent to the container]' \
+  '--update[Update the docker image if a newer is available]' \
+  '(-C --directory)-C[Directory to share with the container as workspace]:DIRECTORY:_path_files -/' \
+  '(-C --directory)--directory[Directory to share with the container as workspace]:DIRECTORY:_path_files -/' \
+  '--use-absolute-path[Mount the workspace directory with the same absolute path as on host]' \
+  '--ptrace[Allow --gdb to work inside container by allowing ptrace]' \
+  '--wrap[Use %prog as transparent wrapper for command]' \
+  '--dns=[Set custom DNS servers]:DNS: ' \
+  "--hostname=[Container host name]:hostname:_hosts" \
+  "--name=[Container name]:name: " \
+  "--privileged[Give extended privileges to this container]" \
+  "--network=[Connect a container to a network]:network mode:(bridge none container host)" \
+  "(-w --workdir)"{-w,--workdir=}"[Working directory inside the container]:directory:_directories" \
+  "*"{-v,--volume=}"[Bind mount a volume]:volume: " \
+  "(-u --user)"{-u,--user=}"[Username or UID]:user:_users" \
+  "*"{-p,--publish=}"[Publish a port as a node port]:port: " \
+  "*"{-e,--env=}"[Environment variables]:environment variable: " \
+  "(-q --quiet --verbose --debug)"{-q,--quiet}"[print only for errors]" \
+  "(-q --quiet --verbose --debug)--verbose[a bit more verbose]" \
+  "(-q --quiet --verbose --debug)--debug[print everything]" \
+  "--quiet-env[prevent LHCb environment banner]" \
+  ":command: _command_names -e" \
+  "*::arguments: _normal" && ret=0
+
+return ret
