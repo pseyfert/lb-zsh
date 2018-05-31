@@ -33,8 +33,8 @@ _arguments '(-c --commit --no-commit)'{-c,--commit}'[commit immediately after ch
            '(-v --verbose -q --quiet -d --debug)'{-d,--debug}'[be very verbose]' \
            '(-v --verbose -q --quiet -d --debug)'{-v,--verbose}'[be more verbose]' \
            '(-q --quiet -v --verbose -d --debug)'{-q,--quiet}'[be more quiet]' \
-           '--version[display version information]' \
-           '--help[display help message]' \
+           '(: -)--version[display version information]' \
+           '(: -)--help[display help message]' \
            '(-)1:project:->projectlookup' \
            '(-)2:packages:->packagelookup' \
            && ret=0
