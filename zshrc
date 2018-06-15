@@ -137,6 +137,10 @@ _expand_alias_and_complete() {
 }
 zstyle ':completion:*' completer _complete _expand_alias_and_complete
 
+# add CMAKEFLAGS and NINJAFLAGS to
+# `export TAB`
+zstyle ':completion::complete:export:argument-rest:' fake-parameters NINJAFLAGS CMAKEFLAGS
+
 alias -g 'ZSH'='/afs/cern.ch/user/p/pseyfert/.local/bin/zsh'
 MYLBRUN() {
   alias -L > $HOME/.tmpaliases
