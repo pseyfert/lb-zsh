@@ -30,7 +30,7 @@ _arguments \
   '(--slc5 --slc6 --centos7)--centos7[Run an centos7 container]' \
   '(--slc5 --slc6 --centos7)--slc5[Run an slc5 container]' \
   '(--slc5 --slc6 --centos7)--slc6[Run an slc6 container, default one]' \
-  '(-c --platform)'{-c,--platform=}'[runtime platform]: _message "platform"' \
+  '(-c --platform)'{-c,--platform=}'[runtime platform]: : _message "platform"' \
   '--force-cvmfs[Mount cvmfs in the container even if available on the host]' \
   '--no-cvmfs[Do not use cvmfs]' \
   '--home[Set a persistent home for this image]' \
@@ -42,7 +42,7 @@ _arguments \
   '--ssh-agent[Forward host ssh-agent to the container]' \
   '--update[Update the docker image if a newer is available]' \
   '(-C --directory)-C[Directory to share with the container as workspace]:DIRECTORY:_path_files -/' \
-  '(-C --directory)--directory[Directory to share with the container as workspace]:DIRECTORY:_path_files -/' \
+  '(-C --directory)--directory=[Directory to share with the container as workspace]:DIRECTORY:_path_files -/' \
   '--use-absolute-path[Mount the workspace directory with the same absolute path as on host]' \
   '--ptrace[Allow --gdb to work inside container by allowing ptrace]' \
   '--wrap[Use %prog as transparent wrapper for command]' \
