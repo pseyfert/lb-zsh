@@ -1,0 +1,68 @@
+#compdef -value-,CMAKEFLAGS,-default-
+
+# https://unix.stackexchange.com/a/450133/150443
+#
+# patch up standard cmake properties
+autoload -U _cmake
+_cmake 2>/dev/null
+(( $+functions[_cmake_define_property_names_orig] )) || functions[_cmake_define_property_names_orig]=$functions[_cmake_define_property_names]
+(( $+functions[_cmake_define_property_values_orig] )) || functions[_cmake_define_property_values_orig]=$functions[_cmake_define_property_values]
+
+if [[ "$service" = -value-* ]]; then
+  compset -q
+  words=( cmake "$words[@]" )
+  (( CURRENT++ ))
+fi
+
+# modified list of build options
+# (copied from _cmake, and some options removed)
+local gaudi_cmake_build_options
+gaudi_cmake_build_options=(
+'-C[Pre-load a script to populate the cache]:script:_files'
+'*-D-[Create a cmake cache entry]:property:_cmake_define_property'
+'-G[Specify a makefile generator]:generator:_cmake_generators'
+'-T[Specify toolset name if supported by generator]:toolset name'
+'(-Wno-dev -Wdev)-Wno-dev[Suppress/Enable developer warnings]'
+'(-Wno-dev -Wdev)-Wdev[Suppress/Enable developer warnings]'
+'(-Wno-deprecated -Wdeprecated)-Wno-deprecated[Suppress/Enable deprecation warnings]'
+'(-Wno-deprecated -Wdeprecated)-Wdeprecated[Suppress/Enable deprecation warnings]'
+'(-Wno-error=dev -Werror=dev)-Wno-error=dev[Make developer warnings (not) errors]'
+'(-Wno-error=dev -Werror=dev)-Werror=dev[Make developer warnings (not) errors]'
+'(-Wno-error=deprecated -Werror=deprecated)-Werror=deprecated[Make deprecated macro and function warnings (not) errors]'
+'(-Wno-error=deprecated -Werror=deprecated)-Wno-error=deprecated[Make deprecated macro and function warnings (not) errors]'
+'--warn-uninitialized[Warn about uninitialized values.]'
+'--warn-unused-vars[Warn about unused variables.]'
+'--no-warn-unused-cli[Dont warn about command line options.]'
+'--trace[Put cmake in trace mode]'
+)
+
+
+_cmake_define_property_values() {
+  local ret=1
+  setopt localoptions extendedglob
+  case $@[-1] in
+    (CMAKE_USE_CCACHE) _wanted booleans expl 'boolean' _cmake_booleans && ret=0;;
+    (GAUDI_DIAGNOSTICS_COLOR) _wanted booleans expl 'boolean' _cmake_booleans && ret=0;;
+  esac
+
+  (( $ret != 0 )) && _cmake_define_property_values_orig $@ && ret=0
+
+  return ret
+}
+
+_cmake_define_property_names() {
+  local ret=1
+
+  local properties; properties=(
+  'CMAKE_USE_CCACHE:Build with ccache'
+  'GAUDI_DIAGNOSTICS_COLOR:Enforce colored compiler messages'
+  )
+
+  _describe -t 'gaudi-property-names' 'gaudi property name' properties -qS=
+
+  _cmake_define_property_names_orig $@ && ret=0
+
+  return ret
+}
+
+_arguments -C -s "$gaudi_cmake_build_options[@]" && return 0
