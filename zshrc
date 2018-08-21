@@ -210,5 +210,9 @@ bkillall() {
 
 export CMAKEFLAGS="${CMAKEFLAGS} -DGAUDI_DIAGNOSTICS_COLOR=ON"
 
-[[ ! -n $X509_VOMS_DIR ]] && export X509_VOMS_DIR=/cvmfs/grid.cern.ch/etc/grid-security/vomsdir
-[[ ! -n $X509_CERT_DIR ]] && export X509_CERT_DIR=/cvmfs/grid.cern.ch/etc/grid-security/certificates
+if (( ! ${+X509_VOMS_DIR} )) ; then
+  export X509_VOMS_DIR=/cvmfs/grid.cern.ch/etc/grid-security/vomsdir
+fi
+if (( ! ${+X509_CERT_DIR} )) ; then
+  export X509_CERT_DIR=/cvmfs/grid.cern.ch/etc/grid-security/certificates
+fi
