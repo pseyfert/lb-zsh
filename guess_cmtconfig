@@ -1,0 +1,83 @@
+#autoload
+
+pickone() {
+  local -a cmts
+  cmts=( ${@#build.} )
+
+  # check if dialog is installed
+  command -v dialog > /dev/null
+  if [[ $? == 0 ]] ; then
+
+    local -a display_cmts
+    display_cmts=()
+    integer i
+    i=1
+    for cmt in $cmts; do
+      display_cmts+=($i)
+      (( i++ ))
+      display_cmts+=($cmt)
+    done
+    menuitem=$(dialog --clear --stdout --title "Pick CMTCONFIG." \
+      --menu "Multiple possible cmtconfig setups found." 0 0 ${#@} \
+      ${display_cmts})
+    if [[ -n $menuitem ]]; then
+      export CMTCONFIG=$cmts[$menuitem]
+      return 0
+    fi
+    return 2
+  elif [[ $? != 1 ]]; then
+    echo "unknown return code from 'command -v dialog'"
+  fi
+  echo "Looks like dialog is not installed. Consider fixing that."
+  echo ""
+  echo "choices are:"
+  for cmt in $cmts ; do
+    echo "   export CMTCONFIG=${cmt}"
+  done
+  return 1
+}
+
+local -a cmts
+cmts=(build.*(/N))
+
+if [[ ${#cmts} -eq 1 ]]; then
+  export CMTCONFIG=${cmts[1]#build.}
+  return 0
+elif [[ ${#cmts} -gt 1 ]]; then
+  pickone ${cmts}
+  return $?
+fi
+
+local ret=127 # not found
+integer dive
+dive=0
+
+# I would've liked to check if `..` exists, but unfortunately `/..` does
+# exist!  As a barrier I don't go higher than $HOME (exploring beyond will
+# usually not bring you anywhere since you're outside of any project when
+# being in $HOME, and the load on e.g. afs would be nonsense)
+# http://unix.stackexchange.com/questions/67898/using-the-not-equal-operator-for-string-comparison
+while [ $PWD != $HOME ] && [ $PWD != "/" ]
+do
+  pushd ..
+  (( dive++ ))
+
+
+  cmts=(build.*(/N))
+  if [[ ${#cmts} -eq 1 ]]; then
+    export CMTCONFIG=${cmts[1]#build.}
+    ret=0
+    found=true
+    break
+  elif [[ ${#cmts} -gt 1 ]]; then
+    pickone ${cmts}
+    ret=$?
+    ret=0
+    found=true
+    break
+  fi
+done
+
+for (( ; dive > 0 ; dive-- )) ; do popd ; done
+
+return ret

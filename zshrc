@@ -216,3 +216,5 @@ fi
 if (( ! ${+X509_CERT_DIR} )) ; then
   export X509_CERT_DIR=/cvmfs/grid.cern.ch/etc/grid-security/certificates
 fi
+
+autoload guess_cmtconfig
