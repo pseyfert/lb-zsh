@@ -186,7 +186,7 @@ export GANGASCRIPTS='/afs/cern.ch/user/p/pseyfert/gangascripts'
 mylxplus() {
   if [ $# -eq 0 ] ; then
     echo "go directly"
-    ssh -t lxplus '/afs/cern.ch/user/p/pseyfert/.local-with-etc/bin/zsh'
+    ssh -t lxplus '/afs/cern.ch/user/p/pseyfert/.local/bin/zsh'
     return $?
   fi
   for arg ;
@@ -194,12 +194,12 @@ mylxplus() {
     if [ "${arg:0:1}" != "-" ] ; then
       echo "go to special host"
       echo "go to host" $arg
-      ssh -t $@ '/afs/cern.ch/user/p/pseyfert/.local-with-etc/bin/zsh'
+      ssh -t $@ '/afs/cern.ch/user/p/pseyfert/.local/bin/zsh'
       return $?
     fi
   done
   echo "go with arguments"
-  ssh -t $@ lxplus '/afs/cern.ch/user/p/pseyfert/.local-with-etc/bin/zsh'
+  ssh -t $@ lxplus '/afs/cern.ch/user/p/pseyfert/.local/bin/zsh'
 }
 
 export LSB_BJOBS_FORMAT='jobid: stat: queue: job_name:58 submit_time: start_time:'
