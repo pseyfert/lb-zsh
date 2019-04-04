@@ -183,10 +183,10 @@ fi
 
 export GANGASCRIPTS='/afs/cern.ch/user/p/pseyfert/gangascripts'
 
-mylxplus() {
+mylxplus6() {
   if [ $# -eq 0 ] ; then
     echo "go directly"
-    ssh -t lxplus '/afs/cern.ch/user/p/pseyfert/.local/bin/zsh'
+    ssh -t lxplus6 '/afs/cern.ch/user/p/pseyfert/.local/bin/zsh'
     return $?
   fi
   for arg ;
